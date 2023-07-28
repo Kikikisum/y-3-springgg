@@ -1,11 +1,11 @@
 package com.example.y3spring.context.beans;
 
-public class SetValue {
+public class PropertyValue {
 
     private final String name;
     private final Object value;
 
-    public SetValue(String name,Object value){
+    public PropertyValue(String name, Object value){
         this.name=name;
         this.value=value;
     }

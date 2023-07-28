@@ -12,13 +12,9 @@ public class BeanDefinition<T> {
      */
     private Class<T> type;
     /**
-     * Bean所带的参数类型
+     * Bean的属性
      */
-    private Class<?>[] parameterTypes;
-    /**
-     * Bean所带的属性值
-     */
-    private Object[] values;
+    private PropertyValues propertyValues;
 
     public BeanDefinition(String name,Class<T> type){
         this.name = name;
