@@ -33,28 +33,4 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
         }
         BEAN_DEFINITION_REGISTRY.put(beanName,beanDefinition);
     }
-
-    /*
-    @Override
-    public <T> T doCreate(String beanName, BeanDefinition<T> beanDefinition) {
-        String name = beanDefinition.getName();
-        if(!name.equals(beanName)){
-            throw new IllegalArgumentException("BeanName和BeanDefinition中的名字不对应，创建bean实例失败");
-        }
-        Class<T> clazz = beanDefinition.getType();
-        Class<?>[] parameterTypes = beanDefinition.getParameterTypes();
-        Object[] parameterValues = beanDefinition.getValues();
-
-        T beanInstance = null;
-        try {
-            Constructor<T> constructor = clazz.getConstructor(parameterTypes);
-
-            beanInstance = constructor.newInstance(parameterValues);
-
-        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-        }
-
-        return beanInstance;
-    }
-    */
 }

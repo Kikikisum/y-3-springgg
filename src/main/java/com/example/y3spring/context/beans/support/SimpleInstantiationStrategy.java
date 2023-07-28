@@ -1,4 +1,4 @@
-package com.example.y3spring.support;
+package com.example.y3spring.context.beans.support;
 
 import com.example.y3spring.context.beans.BeanDefinition;
 

@@ -1,4 +1,5 @@
 package com.example.y3spring.context.beans;
+import com.example.y3spring.context.beans.config.PropertyValues;
 import lombok.Data;
 
 @Data
