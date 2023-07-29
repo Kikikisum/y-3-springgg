@@ -18,5 +18,5 @@ public class BeanReference {
     /**
      * bean类型
      */
-    private String type;
+    //private String type;
 }

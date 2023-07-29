@@ -10,4 +10,11 @@ public interface BeanDefinitionRegistry {
      * @param <T>
      */
     <T> void registerBeanDefinition(String name, BeanDefinition<T> beanDefinition);
+
+    /**
+     * 在注册表中查询是否有同名的beandefinition
+     * @param name bean名字
+     * @return
+     */
+    boolean containsBeanDefinition(String name);
 }
