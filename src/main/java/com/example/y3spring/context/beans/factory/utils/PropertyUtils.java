@@ -144,4 +144,27 @@ public class PropertyUtils {
         }
         return propertyTypeMap;
     }
+    /**
+     * 将传入的属性值按照属性类型进行转换 并返回转换后的值，只限于基本类
+     * @param propertyValue 属性值
+     * @param propertyType 属性类型
+     * @return 转换后的属性值
+     */
+    public static <T> T propertyValueTypeConversion(String propertyValue, Class<T> propertyType){
+
+        if(propertyType.isAssignableFrom(Integer.TYPE) || propertyType.isAssignableFrom(Integer.class)){
+            return (T) Integer.valueOf(propertyValue);
+        }
+        if(propertyType.isAssignableFrom(Double.TYPE) || propertyType.isAssignableFrom(Double.class)){
+            return (T) Double.valueOf(propertyValue);
+        }
+        if(propertyType.isAssignableFrom(Long.TYPE) || propertyType.isAssignableFrom(Long.class)){
+            return (T) Long.valueOf(propertyValue);
+        }
+        if(propertyType.isAssignableFrom(Boolean.TYPE) || propertyType.isAssignableFrom(Boolean.class)){
+            return (T) Boolean.valueOf(propertyValue);
+        }
+
+        return (T) propertyValue;
+    }
 }

@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.XmlUtil;
 import com.example.y3spring.co.io.Resource;
 import com.example.y3spring.co.io.ResourceLoader;
-import com.example.y3spring.context.beans.factory.BeanDefinition;
+import com.example.y3spring.context.beans.factory.config.BeanDefinition;
 import com.example.y3spring.context.beans.factory.config.BeanReference;
 import com.example.y3spring.context.beans.factory.config.PropertyValue;
 import com.example.y3spring.context.beans.factory.config.PropertyValues;
@@ -29,7 +29,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader{
     public static final String CLASS_ATTRIBUTE = "class";
     public static final String VALUE_ATTRIBUTE = "value";
     public static final String REF_ATTRIBUTE = "ref";
-
+    public static final String INIT_METHOD_ATTRIBUTE = "init-method";
+    public static final String DESTROY_METHOD_ATTRIBUTE = "destroy-method";
     public XmlBeanDefinitionReader(ResourceLoader resourceLoader, BeanDefinitionRegistry beanDefinitionRegistry) {
         super(resourceLoader, beanDefinitionRegistry);
     }
@@ -88,6 +89,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader{
         String id = beanElement.getAttribute(ID_ATTRIBUTE);
         String name = beanElement.getAttribute(NAME_ATTRIBUTE);
         String className = beanElement.getAttribute(CLASS_ATTRIBUTE);
+        String initMethodName = beanElement.getAttribute(INIT_METHOD_ATTRIBUTE);
+        String destroyMethodName = beanElement.getAttribute(DESTROY_METHOD_ATTRIBUTE);
 
         Class clazz;
         try {
@@ -168,6 +171,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader{
             }
         }
         beanDefinition.setPropertyValues(propertyValues);
+        beanDefinition.setInitMethodName(initMethodName);
+        beanDefinition.setDestroyMethodName(destroyMethodName);
         // 将bean定义注册进注册表中
         getBeanDefinitionRegistry().registerBeanDefinition(beanName,beanDefinition);
 

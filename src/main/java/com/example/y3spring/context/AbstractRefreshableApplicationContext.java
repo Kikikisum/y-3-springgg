@@ -2,7 +2,7 @@ package com.example.y3spring.context;
 
 import com.example.y3spring.context.beans.factory.support.DefaultListableBeanFactory;
 
-public abstract class AbstractRefreshableApplicationContext extends ConfigurableApplicationContext.AbstractApplicationContext {
+public abstract class AbstractRefreshableApplicationContext extends AbstractApplicationContext{
     private volatile DefaultListableBeanFactory beanFactory;
 
     @Override
@@ -23,6 +23,7 @@ public abstract class AbstractRefreshableApplicationContext extends Configurable
     }
 
     public DefaultListableBeanFactory createBeanFactory(){
+        //todo 更改为用父级上下文的内置BeanFactory作为本上下文的内置BeanFactory的父亲
         return new DefaultListableBeanFactory();
     }
 

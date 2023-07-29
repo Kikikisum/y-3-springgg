@@ -1,5 +1,7 @@
 package com.example.y3spring.context.beans.factory;
 
+import com.example.y3spring.context.beans.factory.config.BeanDefinition;
+
 /**
  * 为BeanFactory提供自动装配Bean属性的接口
  */

@@ -25,8 +25,4 @@ public interface SingletonBeanRegistry {
      */
     Object getSingleBeanByName(String name);
 
-    /**
-     * 反注册所有单例bean
-     */
-    void destroySingletonBeans();
 }

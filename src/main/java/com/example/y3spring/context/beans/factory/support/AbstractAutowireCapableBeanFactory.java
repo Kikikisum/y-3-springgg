@@ -1,9 +1,15 @@
-package com.example.y3spring.context.beans.factory;
+package com.example.y3spring.context.beans.factory.support;
 
+import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.StrUtil;
+import com.example.y3spring.context.beans.factory.AutowireCapableBeanFactory;
+import com.example.y3spring.context.beans.factory.DisposableBean;
+import com.example.y3spring.context.beans.factory.InitializingBean;
 import com.example.y3spring.context.beans.factory.config.*;
 import com.example.y3spring.context.beans.factory.support.AbstractBeanFactory;
 import com.example.y3spring.context.beans.factory.support.SimpleInstantiationStrategy;
 import com.example.y3spring.context.beans.factory.utils.PropertyUtils;
+import com.example.y3spring.exception.BeansException;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
@@ -11,7 +17,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory implements AutowireCapableBeanFactory{
+public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory implements AutowireCapableBeanFactory {
     private static final InstantiationStrategy INSTANTIATION_STRATEGY = new SimpleInstantiationStrategy();
 
     @Override
@@ -26,7 +32,15 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
         T beanInstance = INSTANTIATION_STRATEGY.instantiation(beanDefinition);
         autoWirePropertyValues(name,beanInstance,beanDefinition);
-        beanInstance=initializeBean(name,beanInstance,beanDefinition);
+
+        try {
+            beanInstance = initializeBean(name,beanInstance,beanDefinition);
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            throw new BeansException("bean initialize error",e);
+        }
+
+        // 检查当前bean是否有自定义的destroy方法，若有则需要注册进注册表
+        registerDisposableBeanIfNecessary(name,beanInstance,beanDefinition);
         return beanInstance;
     }
 
@@ -87,12 +101,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     /**
      * 初始化bean的逻辑方法
      */
-    public <T> T initializeBean(String beanName, T bean, BeanDefinition<T> beanDefinition){
+    public <T> T initializeBean(String beanName, T bean, BeanDefinition<T> beanDefinition) throws InvocationTargetException, IllegalAccessException {
 
         // 初始化之前执行后置处理器
-        T wrappedBean = applyBeanPostProcessorsBeforeInitialization(bean,beanName);
+        Object wrappedBean = applyBeanPostProcessorsBeforeInitialization(bean,beanName);
         // 执行自定义初始化方法
-        invokeInitMethods(wrappedBean,beanName);
+        invokeInitMethods(wrappedBean,beanName,beanDefinition);
         // 初始化之后执行后置处理器
         wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
 
@@ -105,20 +119,23 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      * @param beanName bean名字
      * @return 处理过后的bean对象
      */
-    public <T> T applyBeanPostProcessorsBeforeInitialization(T existingBean, String beanName){
+    public <T> void applyBeanPostProcessorsBeforeInitialization(T existingBean, String beanName,BeanDefinition<T> beanDefinition) throws InvocationTargetException,IllegalAccessException{
 
-        List<BeanPostProcessor> beanPostProcessors = getBeanPostProcessors();
+        boolean isInitializingBean = (existingBean instanceof InitializingBean &&
+                !"afterPropertiesSet".equals(beanDefinition.getInitMethodName()));
 
-        T result = existingBean;
-
-        for (BeanPostProcessor beanPostProcessor : beanPostProcessors) {
-            T current = beanPostProcessor.postProcessBeforeInitialization(result,beanName);
-            if(current == null){
-                return result;
-            }
-            result = current;
+        if(isInitializingBean){
+            ((InitializingBean) existingBean).afterPropertiesSet();
         }
-        return result;
+
+        String initMethodName = beanDefinition.getInitMethodName();
+        if(StrUtil.isNotBlank(initMethodName)){
+            Method initMethod = ClassUtil.getPublicMethod(existingBean.getClass(), initMethodName);
+            if(initMethod == null){
+                throw new BeansException("the bean named [" + beanName + "] specify initialization method ["+ initMethodName +"] does not exist");
+            }
+            initMethod.invoke(existingBean);
+        }
     }
 
     /**
@@ -148,8 +165,34 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      * @param existingBean 已实例化的bean
      * @param beanName bean名字
      */
-    public <T> void invokeInitMethods(T existingBean, String beanName){
-        //todo  等待实现：1、查看是否实现了initializingBean接口  2、是否有配置init-method
+    public <T> void invokeInitMethods(T existingBean, String beanName, BeanDefinition<T> beanDefinition) throws InvocationTargetException, IllegalAccessException {
+
+        boolean isInitializingBean = (existingBean instanceof InitializingBean &&
+                !"afterPropertiesSet".equals(beanDefinition.getInitMethodName()));
+
+        if(isInitializingBean){
+            ((InitializingBean) existingBean).afterPropertiesSet();
+        }
+
+        String initMethodName = beanDefinition.getInitMethodName();
+        if(StrUtil.isNotBlank(initMethodName)){
+            Method initMethod = ClassUtil.getPublicMethod(existingBean.getClass(), initMethodName);
+            if(initMethod == null){
+                throw new BeansException("the bean named [" + beanName + "] specify initialization method ["+ initMethodName +"] does not exist");
+            }
+            initMethod.invoke(existingBean);
+        }
+    }
+
+    /**
+     * 判断bean是否实现了DisposableBean接口 或者指定了destroy()方法，若是则注册进注册表中
+     */
+    public <T> void registerDisposableBeanIfNecessary(String beanName, T bean, BeanDefinition<T> beanDefinition){
+
+        // 当bean实现了DisposableBean接口 或者指定了destroy()方法时
+        if(bean instanceof DisposableBean || StrUtil.isNotBlank(beanDefinition.getDestroyMethodName())){
+            registerDisposableBean(beanName,new DisposableBeanAdapter(beanName,bean,beanDefinition));
+        }
     }
 
 }

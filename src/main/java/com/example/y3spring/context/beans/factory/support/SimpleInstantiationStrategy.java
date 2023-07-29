@@ -1,6 +1,6 @@
 package com.example.y3spring.context.beans.factory.support;
 
-import com.example.y3spring.context.beans.factory.BeanDefinition;
+import com.example.y3spring.context.beans.factory.config.BeanDefinition;
 import com.example.y3spring.context.beans.factory.config.InstantiationStrategy;
 
 import java.lang.reflect.Constructor;

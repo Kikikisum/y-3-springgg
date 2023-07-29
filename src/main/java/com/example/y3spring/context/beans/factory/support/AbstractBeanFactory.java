@@ -1,7 +1,7 @@
 package com.example.y3spring.context.beans.factory.support;
 
 
-import com.example.y3spring.context.beans.factory.BeanDefinition;
+import com.example.y3spring.context.beans.factory.config.BeanDefinition;
 import com.example.y3spring.context.beans.factory.BeanFactory;
 import com.example.y3spring.context.beans.factory.ConfigurableBeanFactory;
 import com.example.y3spring.context.beans.factory.config.BeanFactoryPostProcessor;
@@ -72,5 +72,10 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
         //删去之前的beanPostProcessor,添加新的
         beanPostProcessors.remove(beanFactoryPostProcessor);
         beanFactoryPostProcessors.add(beanFactoryPostProcessor);
+    }
+    @Override
+    public void destroySingleton(String beanName, Object bean) {
+        // 委托给DisposableBeanAdapter进行处理
+        new DisposableBeanAdapter(beanName,bean,getBeanDefinition(beanName)).destroy();
     }
 }
