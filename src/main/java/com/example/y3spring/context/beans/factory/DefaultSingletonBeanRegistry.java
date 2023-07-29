@@ -1,4 +1,4 @@
-package com.example.y3spring.context.beans;
+package com.example.y3spring.context.beans.factory;
 
 import java.util.HashMap;
 import java.util.Map;

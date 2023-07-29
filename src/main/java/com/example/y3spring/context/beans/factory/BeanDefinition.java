@@ -1,5 +1,5 @@
-package com.example.y3spring.context.beans;
-import com.example.y3spring.context.beans.config.PropertyValues;
+package com.example.y3spring.context.beans.factory;
+import com.example.y3spring.context.beans.factory.config.PropertyValues;
 import lombok.Data;
 
 @Data

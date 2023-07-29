@@ -1,11 +1,12 @@
-package com.example.y3spring.context.beans.support;
+package com.example.y3spring.context.beans.factory.support;
 
 
-import com.example.y3spring.context.beans.BeanDefinition;
-import com.example.y3spring.context.beans.BeanFactory;
-import com.example.y3spring.context.beans.DefaultSingletonBeanRegistry;
+import com.example.y3spring.context.beans.factory.BeanDefinition;
+import com.example.y3spring.context.beans.factory.BeanFactory;
+import com.example.y3spring.context.beans.factory.ConfigurableBeanFactory;
+import com.example.y3spring.context.beans.factory.DefaultSingletonBeanRegistry;
 
-public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory {
+public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory, ConfigurableBeanFactory {
     @Override
     public Object getBean(String beanName) {
 

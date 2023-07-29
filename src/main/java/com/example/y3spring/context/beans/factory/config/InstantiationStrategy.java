@@ -1,6 +1,6 @@
-package com.example.y3spring.context.beans.support;
+package com.example.y3spring.context.beans.factory.config;
 
-import com.example.y3spring.context.beans.BeanDefinition;
+import com.example.y3spring.context.beans.factory.BeanDefinition;
 
 public interface InstantiationStrategy {
     /**

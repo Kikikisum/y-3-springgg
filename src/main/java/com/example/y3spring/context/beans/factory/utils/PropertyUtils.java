@@ -1,4 +1,4 @@
-package com.example.y3spring.context.beans.utils;
+package com.example.y3spring.context.beans.factory.utils;
 
 import jakarta.annotation.Nullable;
 

@@ -1,11 +1,12 @@
-package com.example.y3spring.context.beans.support;
+package com.example.y3spring.context.beans.factory.support;
 
-import com.example.y3spring.context.beans.BeanDefinition;
+import com.example.y3spring.context.beans.factory.BeanDefinition;
+import com.example.y3spring.context.beans.factory.config.InstantiationStrategy;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-public class SimpleInstantiationStrategy implements InstantiationStrategy{
+public class SimpleInstantiationStrategy implements InstantiationStrategy {
     @Override
     public <T> T instantiation(BeanDefinition<T> beanDefinition) {
         Class<T> clazz = beanDefinition.getType();

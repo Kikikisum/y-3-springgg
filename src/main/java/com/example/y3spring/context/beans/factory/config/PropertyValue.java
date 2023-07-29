@@ -1,4 +1,4 @@
-package com.example.y3spring.context.beans.config;
+package com.example.y3spring.context.beans.factory.config;
 
 public class PropertyValue {
 

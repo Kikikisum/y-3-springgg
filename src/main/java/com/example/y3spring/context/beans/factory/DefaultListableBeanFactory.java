@@ -1,14 +1,16 @@
-package com.example.y3spring.context.beans;
+package com.example.y3spring.context.beans.factory;
 
+
+import com.example.y3spring.context.beans.factory.support.BeanDefinitionRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory implements BeanDefinitionRegistry{
+public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory implements BeanDefinitionRegistry,ConfigurableListableBeanFactory {
     /**
      * bean定义的注册表
      */
-    private static final Map<String,BeanDefinition<?>> BEAN_DEFINITION_REGISTRY = new HashMap<>();
+    private static final Map<String, BeanDefinition<?>> BEAN_DEFINITION_REGISTRY = new HashMap<>();
 
     @Override
     protected BeanDefinition<?> getBeanDefinition(String beanName) {

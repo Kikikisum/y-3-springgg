@@ -1,4 +1,4 @@
-package com.example.y3spring.context.beans;
+package com.example.y3spring.context.beans.factory;
 
 public interface BeanFactory {
     /**
