@@ -17,7 +17,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
-
+/**
+ * 从xml文件读取bean定义的读取器
+ */
 public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader{
 
     public static final String BEAN_ELEMENT_TAG = "bean";
@@ -170,5 +172,12 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader{
         getBeanDefinitionRegistry().registerBeanDefinition(beanName,beanDefinition);
 
         return beanDefinition;
+    }
+
+    @Override
+    public void loadBeanDefinitions(Resource[] resources) {
+        for (Resource resource : resources) {
+            loadBeanDefinitions(resource);
+        }
     }
 }

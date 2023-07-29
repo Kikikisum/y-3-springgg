@@ -4,9 +4,9 @@ package com.example.y3spring.context.beans.factory.support;
 import com.example.y3spring.context.beans.factory.BeanDefinition;
 import com.example.y3spring.context.beans.factory.BeanFactory;
 import com.example.y3spring.context.beans.factory.ConfigurableBeanFactory;
-import com.example.y3spring.context.beans.factory.DefaultSingletonBeanRegistry;
 import com.example.y3spring.context.beans.factory.config.BeanFactoryPostProcessor;
 import com.example.y3spring.context.beans.factory.config.BeanPostProcessor;
+import com.example.y3spring.exception.BeansException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +65,12 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
 
     @Override
     public void addBeanFactoryPostProcessor(BeanFactoryPostProcessor beanFactoryPostProcessor) {
+        if(beanFactoryPostProcessor==null)
+        {
+            throw new BeansException("beanPostProcessor不能为空!");
+        }
+        //删去之前的beanPostProcessor,添加新的
+        beanPostProcessors.remove(beanFactoryPostProcessor);
         beanFactoryPostProcessors.add(beanFactoryPostProcessor);
     }
 }

@@ -1,0 +1,38 @@
+package com.example.y3spring.context;
+
+import com.example.y3spring.context.beans.factory.support.DefaultListableBeanFactory;
+
+public abstract class AbstractRefreshableApplicationContext extends ConfigurableApplicationContext.AbstractApplicationContext {
+    private volatile DefaultListableBeanFactory beanFactory;
+
+    @Override
+    public void refreshBeanFactory() {
+        // 如果内置BeanFactory已被创建 则注销该容器的所有bean 并且关闭该容器 重开一个新的
+        if(this.beanFactory != null){
+            this.beanFactory.destroyBeans();
+            this.beanFactory = null;
+        }
+        // 创建一个新的BeanFactory
+        DefaultListableBeanFactory beanFactory = createBeanFactory();
+
+        // 加载所有的beanDefinition  todo 这里是否包含特殊bean？
+        loadBeanDefinitions(beanFactory);
+
+
+        this.beanFactory = beanFactory;
+    }
+
+    public DefaultListableBeanFactory createBeanFactory(){
+        return new DefaultListableBeanFactory();
+    }
+
+    @Override
+    protected DefaultListableBeanFactory getBeanFactory() {
+        return beanFactory;
+    }
+
+    /**
+     * 将BeanDefinition加载到指定的BeanFactory中。此功能委托给BeanDefinitionReader来实现
+     */
+    protected abstract void loadBeanDefinitions(DefaultListableBeanFactory beanFactory);
+}

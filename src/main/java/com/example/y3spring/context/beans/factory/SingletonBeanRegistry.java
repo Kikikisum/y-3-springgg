@@ -24,4 +24,9 @@ public interface SingletonBeanRegistry {
      * @return bean的实例
      */
     Object getSingleBeanByName(String name);
+
+    /**
+     * 反注册所有单例bean
+     */
+    void destroySingletonBeans();
 }
