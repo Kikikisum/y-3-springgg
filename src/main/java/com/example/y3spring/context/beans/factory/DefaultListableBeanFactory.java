@@ -6,7 +6,7 @@ import com.example.y3spring.context.beans.factory.support.BeanDefinitionRegistry
 import java.util.HashMap;
 import java.util.Map;
 
-public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory implements BeanDefinitionRegistry,ConfigurableListableBeanFactory {
+public abstract class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory implements BeanDefinitionRegistry,ConfigurableListableBeanFactory {
     /**
      * bean定义的注册表
      */

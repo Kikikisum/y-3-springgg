@@ -5,8 +5,17 @@ import com.example.y3spring.context.beans.factory.BeanDefinition;
 import com.example.y3spring.context.beans.factory.BeanFactory;
 import com.example.y3spring.context.beans.factory.ConfigurableBeanFactory;
 import com.example.y3spring.context.beans.factory.DefaultSingletonBeanRegistry;
+import com.example.y3spring.context.beans.factory.config.BeanFactoryPostProcessor;
+import com.example.y3spring.context.beans.factory.config.BeanPostProcessor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory, ConfigurableBeanFactory {
+    private final List<BeanPostProcessor> beanPostProcessors = new ArrayList<>();
+
+    private final List<BeanFactoryPostProcessor> beanFactoryPostProcessors = new ArrayList<>();
+
     @Override
     public Object getBean(String beanName) {
 
@@ -36,4 +45,6 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
      * 根据beanName获取它的bean定义
      */
     protected abstract BeanDefinition<?> getBeanDefinition(String beanName);
+
+    protected abstract <T> T createBean(String name, BeanDefinition<T> beanDefinition);
 }
