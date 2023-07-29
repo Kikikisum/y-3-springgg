@@ -23,7 +23,7 @@ public interface ConfigurableBeanFactory extends BeanFactory,SingletonBeanRegist
 
     /**
      * 向当前容器添加BeanPostProcessor
-     * @param beanPostProcessor 指定的bean后置处理器
+     * @param beanPostProcessor
      */
     void addBeanPostProcessor(BeanPostProcessor beanPostProcessor);
 

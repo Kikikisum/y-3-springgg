@@ -47,4 +47,24 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
     protected abstract BeanDefinition<?> getBeanDefinition(String beanName);
 
     protected abstract <T> T createBean(String name, BeanDefinition<T> beanDefinition);
+
+    @Override
+    public List<BeanPostProcessor> getBeanPostProcessors() {
+        return beanPostProcessors;
+    }
+
+    @Override
+    public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor) {
+        beanPostProcessors.add(beanPostProcessor);
+    }
+
+    @Override
+    public List<BeanFactoryPostProcessor> getBeanFactoryBeanPostProcessors() {
+        return beanFactoryPostProcessors;
+    }
+
+    @Override
+    public void addBeanFactoryPostProcessor(BeanFactoryPostProcessor beanFactoryPostProcessor) {
+        beanFactoryPostProcessors.add(beanFactoryPostProcessor);
+    }
 }
