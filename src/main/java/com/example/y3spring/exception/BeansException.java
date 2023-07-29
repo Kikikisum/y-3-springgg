@@ -1,4 +1,4 @@
-package com.example.y3spring.context.beans.factory.exception;
+package com.example.y3spring.exception;
 
 public class BeansException extends RuntimeException{
 

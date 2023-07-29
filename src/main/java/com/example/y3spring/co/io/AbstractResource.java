@@ -1,6 +1,6 @@
-package com.example.y3spring.context.beans.factory.resource;
+package com.example.y3spring.co.io;
 
-import com.example.y3spring.context.beans.factory.exception.NestedIOException;
+import com.example.y3spring.exception.NestedIOException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-public abstract class AbstractResource implements Resource{
+public abstract class AbstractResource implements Resource {
     @Override
 
     public boolean isExist()

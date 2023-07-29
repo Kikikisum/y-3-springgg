@@ -1,9 +1,13 @@
-package com.example.y3spring.context.beans.factory.resource;
+package com.example.y3spring.co.io;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
+
+/**
+ * 资源的抽象，一个Resource代表一个资源
+ */
 
 public interface Resource {
     /**
