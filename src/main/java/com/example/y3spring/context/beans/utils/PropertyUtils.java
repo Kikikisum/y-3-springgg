@@ -1,5 +1,7 @@
 package com.example.y3spring.context.beans.utils;
 
+import jakarta.annotation.Nullable;
+
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -16,8 +18,14 @@ public class PropertyUtils {
      */
     private static final Map<Class<?>, Map<String, PropertyDescriptor>> BEANS_PROPERTY_MAP;
 
+    /**
+     * 用于获取Bean类的每种属性类型
+     */
+    private static final Map<Class<?>, Map<String,Class<?>>> BEANS_PROPERTY_TYPE_MAP;
+
     static {
         BEANS_PROPERTY_MAP = new HashMap<>();
+        BEANS_PROPERTY_TYPE_MAP = new HashMap<>();
     }
 
     public static void addBeanPropertyMap(Class<?> clazz, Map<String,PropertyDescriptor> map){
@@ -25,7 +33,7 @@ public class PropertyUtils {
     }
 
     /**
-     * 根据指定类的clazz获取其propertyDescriptorMap
+     * 根据指定类的类型clazz获取其propertyDescriptorMap
      * @param clazz
      * @return
      */
@@ -60,8 +68,10 @@ public class PropertyUtils {
         for(Field field : fields){
             String propertyName = field.getName();
             try {
+                Class<?> propertyType=field.getType();
                 PropertyDescriptor pv = new PropertyDescriptor(propertyName, clazz);
                 descriptorMap.put(propertyName,pv);
+                addPropertyType(clazz,propertyName,propertyType);
             } catch (IntrospectionException e) {
                 e.printStackTrace();
             }
@@ -73,7 +83,7 @@ public class PropertyUtils {
      * @param clazz 指定类的class
      * @param propertyName 属性名
      */
-    public static void addPropertyDescriptor(Class<?> clazz, String propertyName){
+    public static void addPropertyDescriptor(Class<?> clazz, String propertyName, @Nullable Class<?> anotherType){
         Method setterMethod;
         Method getterMethod;
         PropertyDescriptor pd;
@@ -82,14 +92,8 @@ public class PropertyUtils {
             Field field = clazz.getDeclaredField(propertyName);
             Class<?> propertyType = field.getType();
 
-            // 获取setter和getter方法
-            String methodSuffix = propertyName.substring(0,1).toUpperCase() + propertyName.substring(1);
 
-            setterMethod = propertyType.getDeclaredMethod("set" + methodSuffix, propertyType);
-            getterMethod = propertyType.getDeclaredMethod("get" + methodSuffix, propertyType);
-
-
-            pd = new PropertyDescriptor(propertyName, getterMethod, setterMethod);
+            pd = new PropertyDescriptor(propertyName, clazz);
 
             // 添加进map中
             Map<String, PropertyDescriptor> descriptorMap = BEANS_PROPERTY_MAP.get(clazz);
@@ -99,8 +103,45 @@ public class PropertyUtils {
             }
             descriptorMap.put(propertyName,pd);
 
-        } catch (NoSuchFieldException | NoSuchMethodException | IntrospectionException e) {
+            // 检查是否有设置另外的类型
+            if(anotherType != null){
+                addPropertyType(clazz, propertyName, anotherType);
+            }else {
+                addPropertyType(clazz,propertyName,propertyType);
+            }
+
+        } catch (NoSuchFieldException | IntrospectionException e) {
             e.printStackTrace();
         }
+    }
+    public static void addPropertyType(Class<?> clazz, String propertyName, Class<?> propertyType){
+        Map<String, Class<?>> propertyTypeMap = BEANS_PROPERTY_TYPE_MAP.get(clazz);
+        if(propertyTypeMap == null){
+            synchronized (PropertyUtils.class){
+                BEANS_PROPERTY_TYPE_MAP.putIfAbsent(clazz,new HashMap<>());
+                propertyTypeMap = BEANS_PROPERTY_TYPE_MAP.get(clazz);
+            }
+        }
+        propertyTypeMap.put(propertyName,propertyType);
+    }
+
+    public static Class<?> getPropertyType(Class<?> clazz, String propertyName){
+        Map<String, Class<?>> propertyTypeMap = BEANS_PROPERTY_TYPE_MAP.get(clazz);
+        if(propertyTypeMap == null){
+            throw new IllegalArgumentException("该Bean类型不存在");
+        }
+        Class<?> propertyType = propertyTypeMap.get(propertyName);
+        if(propertyType == null){
+            throw new IllegalArgumentException("该Bean不存在该属性名: " + propertyName);
+        }
+        return propertyType;
+    }
+
+    public static Map<String,Class<?>> getPropertyTypeMap(Class<?> clazz){
+        Map<String, Class<?>> propertyTypeMap = BEANS_PROPERTY_TYPE_MAP.get(clazz);
+        if(propertyTypeMap == null){
+            throw new IllegalArgumentException("该Bean类型不存在");
+        }
+        return propertyTypeMap;
     }
 }
