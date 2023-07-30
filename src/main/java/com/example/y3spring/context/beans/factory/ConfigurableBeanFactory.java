@@ -2,13 +2,14 @@ package com.example.y3spring.context.beans.factory;
 
 import com.example.y3spring.context.beans.factory.config.BeanFactoryPostProcessor;
 import com.example.y3spring.context.beans.factory.config.BeanPostProcessor;
+import com.example.y3spring.context.beans.factory.support.SingletonBeanRegistry;
 
 import java.util.List;
 
 /**
  * 对BeanFactory进行配置的接口
  */
-public interface ConfigurableBeanFactory extends BeanFactory,SingletonBeanRegistry{
+public interface ConfigurableBeanFactory extends BeanFactory, SingletonBeanRegistry {
     /**
      * 获取当前容器的BeanPostProcessor列表
      * @return

@@ -9,7 +9,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
     public void refreshBeanFactory() {
         // 如果内置BeanFactory已被创建 则注销该容器的所有bean 并且关闭该容器 重开一个新的
         if(this.beanFactory != null){
-            this.beanFactory.destroyBeans();
+            this.beanFactory.destroySingletons();
             this.beanFactory = null;
         }
         // 创建一个新的BeanFactory
@@ -30,6 +30,14 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
     @Override
     protected DefaultListableBeanFactory getBeanFactory() {
         return beanFactory;
+    }
+
+    /**
+     * 关闭内置的BeanFactory
+     */
+    @Override
+    protected void closeBeanFactory() {
+        beanFactory = null;
     }
 
     /**

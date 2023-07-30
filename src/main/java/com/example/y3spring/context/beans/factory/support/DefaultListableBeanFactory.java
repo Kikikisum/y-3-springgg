@@ -29,6 +29,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
     private final Map<Class<?>,String[]> singletonBeanNamesByType = new ConcurrentHashMap<>();
 
     @Override
+    protected <T> T createBean(BeanDefinition<T> beanDefinition) {
+        return null;
+    }
+
+    @Override
     protected BeanDefinition<?> getBeanDefinition(String beanName) {
         if(beanName==null){
             throw new IllegalArgumentException("beanName不能为空");
@@ -94,7 +99,6 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
             }
 
         });
-        //todo 再查看手动注册的注册表 先不考虑实现
 
         return result.toArray(new String[0]);
     }
@@ -112,7 +116,6 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
     @Override
     public void preInitiateSingletons() {
         beanDefinitionMap.forEach((beanName,beanDefinition)->{
-            //todo 偷懒 直接调用getBean的逻辑 实际上这里浪费了返回值，并且全是以单例的方式创建
             getBean(beanName);
         });
     }

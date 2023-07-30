@@ -28,11 +28,6 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
     }
 
 
-    @Override
-    public void close() {
-
-    }
-
     public ConfigurableListableBeanFactory obtainBeanFactory(){
         refreshBeanFactory();
         return getBeanFactory();
@@ -81,7 +76,30 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
             }
         }
     }
+    /**
+     * 模板方法 实际逻辑交给子类实现
+     */
+    @Override
+    public void close() {
 
+        // 先销毁所有的bean实例
+        destroyBeans();
+        // 再关闭内置的BeanFactory
+        closeBeanFactory();
+
+    }
+
+    /**
+     * 销毁所有的bean实例
+     */
+    protected void destroyBeans(){
+        getBeanFactory().destroySingletons();
+    }
+
+    /**
+     * 关闭内置的BeanFactory
+     */
+    protected abstract void closeBeanFactory();
 
     /**
      * 委托给内置BeanFactory处理
