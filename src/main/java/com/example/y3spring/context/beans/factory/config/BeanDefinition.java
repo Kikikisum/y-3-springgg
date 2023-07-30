@@ -1,9 +1,19 @@
 package com.example.y3spring.context.beans.factory.config;
+import com.example.y3spring.context.beans.factory.ConfigurableBeanFactory;
 import com.example.y3spring.context.beans.factory.config.PropertyValues;
 import lombok.Data;
 
 @Data
 public class BeanDefinition<T> {
+    /**
+     * 单例作用域的标识符
+     */
+    public static final String SCOPE_SINGLETON = ConfigurableBeanFactory.SCOPE_SINGLETON;
+    /**
+     * 多例作用域的标识符
+     */
+    public static final String SCOPE_PROTOTYPE = ConfigurableBeanFactory.SCOPE_PROTOTYPE;
+
     /**
      * Bean的类型
      */
@@ -22,6 +32,16 @@ public class BeanDefinition<T> {
     private String destroyMethodName;
 
 
+    /**
+     * 该Bean是否定义为单例
+     */
+    private boolean isSingleton;
+    /**
+     * 该Bean是否定义为多例
+     */
+    private boolean isPrototype;
+
+
     public BeanDefinition(){};
 
     public BeanDefinition(Class<T> type, PropertyValues propertyValues) {
@@ -34,5 +54,13 @@ public class BeanDefinition<T> {
         this.propertyValues = propertyValues;
         this.initMethodName = initMethodName;
         this.destroyMethodName = destroyMethodName;
+    }
+
+    public boolean isSingleton() {
+        return isSingleton;
+    }
+
+    public boolean isPrototype() {
+        return isPrototype;
     }
 }

@@ -10,6 +10,16 @@ import java.util.List;
  * 对BeanFactory进行配置的接口
  */
 public interface ConfigurableBeanFactory extends BeanFactory, SingletonBeanRegistry {
+
+    /**
+     * 单例作用域的标识符
+     */
+    String SCOPE_SINGLETON = "singleton";
+    /**
+     * 多例作用域的标识符
+     */
+    String SCOPE_PROTOTYPE = "prototype";
+
     /**
      * 获取当前容器的BeanPostProcessor列表
      * @return

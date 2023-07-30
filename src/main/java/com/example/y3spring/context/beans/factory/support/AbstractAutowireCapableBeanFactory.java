@@ -189,11 +189,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     /**
      * 判断bean是否实现了DisposableBean接口 或者指定了destroy()方法，若是则注册进注册表中
      */
-    public <T> void registerDisposableBeanIfNecessary(String beanName, T bean, BeanDefinition<T> beanDefinition){
+    protected  <T> void registerDisposableBeanIfNecessary(String beanName, T bean, BeanDefinition<T> beanDefinition){
 
-        // 当bean实现了DisposableBean接口 或者指定了destroy()方法时
-        if(bean instanceof DisposableBean || StrUtil.isNotBlank(beanDefinition.getDestroyMethodName())){
-            registerDisposableBean(beanName,new DisposableBeanAdapter(beanName,bean,beanDefinition));
+        // 只有单例bean才能执行自定义的destroy
+        if(beanDefinition.isSingleton()){
+            // 当bean实现了DisposableBean接口 或者指定了destroy()方法时
+            if(bean instanceof DisposableBean || StrUtil.isNotBlank(beanDefinition.getDestroyMethodName())){
+                registerDisposableBean(beanName,new DisposableBeanAdapter(beanName,bean,beanDefinition));
+            }
         }
     }
 
