@@ -1,9 +1,9 @@
 package com.example.y3spring.context;
 
-import com.example.y3spring.co.io.DefaultResourceLoader;
-import com.example.y3spring.co.io.Resource;
-import com.example.y3spring.context.beans.factory.support.DefaultListableBeanFactory;
-import com.example.y3spring.context.beans.factory.support.XmlBeanDefinitionReader;
+import com.example.y3spring.beans.factory.io.DefaultResourceLoader;
+import com.example.y3spring.beans.factory.io.Resource;
+import com.example.y3spring.beans.factory.support.DefaultListableBeanFactory;
+import com.example.y3spring.beans.factory.support.XmlBeanDefinitionReader;
 
 public abstract class AbstractXmlApplicationContext extends AbstractRefreshableApplicationContext {
 

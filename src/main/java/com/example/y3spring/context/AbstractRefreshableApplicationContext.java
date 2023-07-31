@@ -1,6 +1,6 @@
 package com.example.y3spring.context;
 
-import com.example.y3spring.context.beans.factory.support.DefaultListableBeanFactory;
+import com.example.y3spring.beans.factory.support.DefaultListableBeanFactory;
 
 public abstract class AbstractRefreshableApplicationContext extends AbstractApplicationContext{
     private volatile DefaultListableBeanFactory beanFactory;
