@@ -1,6 +1,6 @@
 package com.example.y3spring.context;
 
-import com.example.y3spring.beans.factory.io.ResourceLoader;
+import com.example.y3spring.beans.factory.co.io.ResourceLoader;
 import com.example.y3spring.beans.factory.HierarchicalBeanFactory;
 import com.example.y3spring.beans.factory.ListableBeanFactory;
 

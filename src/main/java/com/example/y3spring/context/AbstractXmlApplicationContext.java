@@ -1,7 +1,7 @@
 package com.example.y3spring.context;
 
-import com.example.y3spring.beans.factory.io.DefaultResourceLoader;
-import com.example.y3spring.beans.factory.io.Resource;
+import com.example.y3spring.beans.factory.co.io.DefaultResourceLoader;
+import com.example.y3spring.beans.factory.co.io.Resource;
 import com.example.y3spring.beans.factory.support.DefaultListableBeanFactory;
 import com.example.y3spring.beans.factory.support.XmlBeanDefinitionReader;
 

@@ -1,6 +1,6 @@
 package com.example.y3spring.beans.factory.support;
 
-import com.example.y3spring.beans.factory.io.ResourceLoader;
+import com.example.y3spring.beans.factory.co.io.ResourceLoader;
 
 public abstract class AbstractBeanDefinitionReader implements BeanDefinitionReader{
     private final ResourceLoader resourceLoader;

@@ -2,14 +2,12 @@ package com.example.y3spring.beans.factory.support;
 
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
-import com.example.y3spring.beans.factory.AutowireCapableBeanFactory;
-import com.example.y3spring.beans.factory.DisposableBean;
-import com.example.y3spring.beans.factory.InitializingBean;
+import com.example.y3spring.beans.factory.*;
 import com.example.y3spring.beans.factory.config.*;
 import com.example.y3spring.beans.factory.utils.PropertyUtils;
-import com.example.y3spring.context.beans.factory.config.*;
+import com.example.y3spring.context.Aware;
 import com.example.y3spring.beans.factory.exception.BeansException;
-import com.example.y3spring.factory.config.*;
+
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
@@ -110,6 +108,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      */
     public <T> T initializeBean(String beanName, T bean, BeanDefinition<T> beanDefinition) throws InvocationTargetException, IllegalAccessException {
 
+        invokeAwareMethods(beanName,bean);
         // 初始化之前执行后置处理器
         T wrappedBean = applyBeanPostProcessorsBeforeInitialization(bean,beanName);
         // 执行自定义初始化方法
@@ -162,6 +161,20 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             result = current;
         }
         return result;
+    }
+
+    /**
+     * 检查指定Bean是否实现了Aware接口，并回调其方法
+     */
+    private void invokeAwareMethods(String beanName, Object bean) {
+        if(bean instanceof Aware){
+            if(bean instanceof BeanFactoryAware){
+                ((BeanFactoryAware) bean).setBeanFactory(this);
+            }
+            if(bean instanceof BeanNameAware){
+                ((BeanNameAware) bean).setBeanName(beanName);
+            }
+        }
     }
 
     /**

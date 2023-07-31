@@ -1,7 +1,7 @@
 package com.example.y3spring.beans.factory.support;
 
-import com.example.y3spring.beans.factory.io.Resource;
-import com.example.y3spring.beans.factory.io.ResourceLoader;
+import com.example.y3spring.beans.factory.co.io.Resource;
+import com.example.y3spring.beans.factory.co.io.ResourceLoader;
 
 /**
  * 提供读取Bean定义的接口

@@ -10,7 +10,11 @@ public interface BeanPostProcessor {
      * @param name bean名字
      * @return 装饰后的bean对象
      */
-    <T> T postProcessBeforeInitialization(T bean, String name);
+    default <T> T postProcessBeforeInitialization(T bean, String name)
+    {
+        return bean;
+    }
+
 
     /**
      * 在初始化bean之后被调用
@@ -18,5 +22,8 @@ public interface BeanPostProcessor {
      * @param name bean名字
      * @return 装饰后的bean对象
      */
-    <T> T postProcessAfterInitialization(T bean, String name);
+    default <T> T postProcessAfterInitialization(T bean, String name){
+        return bean;
+    }
+
 }

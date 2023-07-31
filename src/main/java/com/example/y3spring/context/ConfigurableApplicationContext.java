@@ -1,6 +1,6 @@
 package com.example.y3spring.context;
 
-import com.example.y3spring.beans.factory.io.DefaultResourceLoader;
+import com.example.y3spring.beans.factory.co.io.DefaultResourceLoader;
 import com.example.y3spring.beans.factory.ConfigurableListableBeanFactory;
 import com.example.y3spring.beans.factory.config.BeanFactoryPostProcessor;
 import com.example.y3spring.beans.factory.config.BeanPostProcessor;

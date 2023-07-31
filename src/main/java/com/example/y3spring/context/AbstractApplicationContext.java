@@ -1,9 +1,10 @@
 package com.example.y3spring.context;
 
-import com.example.y3spring.beans.factory.io.DefaultResourceLoader;
+import com.example.y3spring.beans.factory.co.io.DefaultResourceLoader;
 import com.example.y3spring.beans.factory.ConfigurableListableBeanFactory;
 import com.example.y3spring.beans.factory.config.BeanFactoryPostProcessor;
 import com.example.y3spring.beans.factory.config.BeanPostProcessor;
+import com.example.y3spring.beans.factory.support.ApplicationContextAwareProcessor;
 import com.example.y3spring.beans.factory.support.DefaultListableBeanFactory;
 import com.example.y3spring.beans.factory.exception.BeansException;
 
@@ -11,10 +12,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
     //todo 模板方法 只提供了抽象逻辑 具体逻辑由子类实现
     @Override
     public void refresh() {
-        // 启动上下文 创建内置的beanFactory 从xml文件中加载所有的beanDefinition（包括特殊bean）
-        refreshBeanFactory();
-
-        DefaultListableBeanFactory beanFactory = getBeanFactory();
+        ConfigurableListableBeanFactory beanFactory=obtainBeanFactory();
+        prepareBeanFactory(beanFactory);
 
         // 在实例化bean之前调用beanFactoryPostProcessor 看是否需要修改beanDefinition
         invokeBeanFactoryPostProcessors(beanFactory);
@@ -28,8 +27,22 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
     }
 
 
-    public ConfigurableListableBeanFactory obtainBeanFactory(){
+    /**
+     * 为指定的BeanFactory填充特殊属性，一般用于初始化内置BeanFactory
+     */
+    protected void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
+
+        beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
+
+    }
+
+    /**
+     * 启动并获取BeanFactory，若已启动则重启BeanFactory
+     */
+    protected ConfigurableListableBeanFactory obtainBeanFactory(){
+        // 启动上下文 创建内置的beanFactory 从xml文件中加载所有的beanDefinition（包括特殊bean）
         refreshBeanFactory();
+        // 获取BeanFactory
         return getBeanFactory();
     }
 
