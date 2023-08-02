@@ -26,7 +26,7 @@ public class AdvisedSupport {
      * 若是 则为Cglib动态代理
      * 若否 则为Jdk动态代理
      */
-    private boolean isProxyTargetClass;
+    private boolean isProxyTargetClass=true;
 
     private Class<?>[] cacheInterfaces;
     /**
