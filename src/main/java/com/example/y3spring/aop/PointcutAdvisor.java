@@ -1,8 +1,13 @@
 package com.example.y3spring.aop;
 
-public interface PointcutAdvisor extends Advisor{
+import org.aopalliance.aop.Advice;
+
+public interface PointcutAdvisor extends Advisor, org.springframework.aop.Advisor {
     /**
      * 获取当前Advisor所匹配的切入点
      */
-    PointCut getPointcut();
+    Pointcut getPointcut();
+
+    @Override
+    Advice getAdvice();
 }

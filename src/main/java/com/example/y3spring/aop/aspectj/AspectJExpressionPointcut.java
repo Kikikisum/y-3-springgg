@@ -19,10 +19,12 @@ public class AspectJExpressionPointcut implements ExpressionPointcut, ClassFilte
         SUPPORTED_PRIMITIVES.add(PointcutPrimitive.EXECUTION);
     }
 
-    private final PointcutExpression pointcutExpression;
+    private PointcutExpression pointcutExpression;
+
+    private final PointcutParser pointcutParser;
 
     public AspectJExpressionPointcut(String expression) {
-        PointcutParser pointcutParser = PointcutParser.getPointcutParserSupportingSpecifiedPrimitivesAndUsingSpecifiedClassLoaderForResolution(SUPPORTED_PRIMITIVES, this.getClass().getClassLoader());
+        pointcutParser = PointcutParser.getPointcutParserSupportingSpecifiedPrimitivesAndUsingSpecifiedClassLoaderForResolution(SUPPORTED_PRIMITIVES, this.getClass().getClassLoader());
         pointcutExpression = pointcutParser.parsePointcutExpression(expression);
     }
 
@@ -49,5 +51,9 @@ public class AspectJExpressionPointcut implements ExpressionPointcut, ClassFilte
     @Override
     public String getExpression() {
         return pointcutExpression.getPointcutExpression();
+    }
+
+    public void setExpression(String expression){
+        this.pointcutExpression = pointcutParser.parsePointcutExpression(expression);
     }
 }

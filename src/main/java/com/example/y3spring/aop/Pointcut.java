@@ -1,6 +1,8 @@
 package com.example.y3spring.aop;
 
-public interface PointCut {
+import com.example.y3spring.aop.support.DefaultPointcut;
+
+public interface Pointcut {
     /**
      * 获取当前切入点的类过滤器
      */
@@ -11,4 +13,8 @@ public interface PointCut {
      */
     MethodMatcher getMethodMatcher();
 
+    /**
+     * 默认的切入点
+     */
+    Pointcut DEFAULT_POINT_CUT = DefaultPointcut.INSTANCE;
 }
