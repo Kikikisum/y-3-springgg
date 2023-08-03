@@ -3,14 +3,17 @@ package com.example.y3spring.beans.factory.support;
 
 import com.example.y3spring.beans.factory.BeanFactory;
 import com.example.y3spring.beans.factory.ConfigurableBeanFactory;
+import com.example.y3spring.beans.factory.FactoryBean;
 import com.example.y3spring.beans.factory.config.BeanDefinition;
 import com.example.y3spring.beans.factory.config.BeanFactoryPostProcessor;
 import com.example.y3spring.beans.factory.config.BeanPostProcessor;
 import com.example.y3spring.beans.factory.exception.BeansException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory, ConfigurableBeanFactory {
     private final List<BeanPostProcessor> beanPostProcessors = new ArrayList<>();
 
@@ -89,5 +92,74 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
         }
 
         return bean;
+    }
+
+    protected Object adaptBeanInstance(String beanName, Object beanInstance, Class<?> requiredType) {
+        // 如果bean不是指定类型的实例 需要判断能否转化成指定类型
+        if(requiredType != null && !requiredType.isInstance(beanInstance)){
+            // 判断能够转化为对应类型的对象
+
+            // 如果bean实例是目标类型的子类
+            if(requiredType.isAssignableFrom(beanInstance.getClass())){
+                return requiredType.cast(beanInstance);
+            }
+        }
+        return beanInstance;
+    }
+
+    protected Object doGetBean(String beanName, Class<?> requiredType){
+        Object beanInstance;
+
+        // 在缓存中获取共享的bean实例
+        Object sharedInstance = getSingleton(beanName);
+
+        if(sharedInstance != null){
+            beanInstance = getObjectForBeanInstance(sharedInstance,beanName);
+        }
+        // 否则要准备创建新的bean实例
+        else {
+            BeanDefinition<?> beanDefinition = getBeanDefinition(beanName);
+
+            if(beanDefinition == null){
+                return null;
+            }
+
+            beanInstance = createBean(beanName,beanDefinition);
+
+            // 单例 需要缓存
+            if(beanDefinition.isSingleton()){
+                addSingleton(beanName,beanInstance);
+            }
+
+            beanInstance = getObjectForBeanInstance(beanInstance,beanName);
+        }
+
+        return adaptBeanInstance(beanName,beanInstance,requiredType);
+    }
+    /**
+     * 从bean实例中获取bean
+     * 用于特殊bean的处理（如FactoryBean、prototype作用域的bean等）
+     * @param beanInstance bean实例
+     */
+    protected Object getObjectForBeanInstance(Object beanInstance,String beanName){
+
+        Object instance = null;
+        // 如果该实例是FactoryBean，则获取内置的bean
+        if(beanInstance instanceof FactoryBean){
+            // 先从缓存中获取
+            //Object cacheInstance = getCachedObjectForFactoryBean(beanName);
+            //if(cacheInstance != null){
+            //    return cacheInstance;
+            //}
+            // 若缓存中没有
+            FactoryBean<?> factory = (FactoryBean<?>) beanInstance;
+
+            //instance = getObjectFromFactoryBean(beanName,factory);
+
+        }else {
+            instance = beanInstance;
+        }
+
+        return instance;
     }
 }

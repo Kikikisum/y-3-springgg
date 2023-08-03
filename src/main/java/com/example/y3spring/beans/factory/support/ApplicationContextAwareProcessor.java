@@ -8,7 +8,7 @@ import com.example.y3spring.context.ConfigurableApplicationContext;
  * ApplicationContextAware接口的bean回调注入ApplicationContext的BeanPostProcessor
  */
 public class ApplicationContextAwareProcessor implements BeanPostProcessor {
-    private final ConfigurableApplicationContext applicationContext;
+    protected final ConfigurableApplicationContext applicationContext;
 
 
     public ApplicationContextAwareProcessor(ConfigurableApplicationContext applicationContext) {

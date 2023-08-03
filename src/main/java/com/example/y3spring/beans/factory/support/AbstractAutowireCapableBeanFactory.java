@@ -20,6 +20,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
     @Override
     protected <T> T createBean(String name, BeanDefinition<T> beanDefinition) {
+        Object bean = resolveBeforeInstantiation(name,beanDefinition);
+        if(bean != null){
+            return (T) bean;
+        }
         return doCreateBean(name,beanDefinition);
     }
 
@@ -50,10 +54,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     @Override
     public <T> void autoWirePropertyValues(String beanName, T existingBean, BeanDefinition<T> beanDefinition){
         PropertyValues propertyValues = beanDefinition.getPropertyValues();
-
         Class<?> clazz = existingBean.getClass();
-
-        //todo 获取该Bean类的所有PropertyDescriptor --> 生命周期开始为在XMl扫描时按需调用
+        // 获取该Bean类的所有PropertyDescriptor --> 生命周期开始为在XMl扫描时按需调用
         Map<String, PropertyDescriptor> beanPropertyMap = PropertyUtils.getBeanPropertyMap(clazz);
 
         Map<String, Class<?>> propertyTypeMap = PropertyUtils.getPropertyTypeMap(clazz);
@@ -213,6 +215,51 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                 registerDisposableBean(beanName,new DisposableBeanAdapter(beanName,bean,beanDefinition));
             }
         }
+    }
+
+    /**
+     * 在具体实例化bean之前调用，看该bean能否被实例化为代理对象
+     * @param beanName 目标bean名字
+     * @param beanDefinition 目标bean定义
+     * @return 不为null - 该bean的代理对象
+     *         null - 无法生成代理对象
+     */
+    protected Object resolveBeforeInstantiation(String beanName, BeanDefinition<?> beanDefinition){
+        //todo 判断是否有实例化用的BeanPostProcessor
+
+        Class<?> beanClass = beanDefinition.getType();
+
+        // 使用实例化处理器的前置方法 创建代理对象
+        Object bean = applyBeanPostProcessorBeforeInstantiation(beanClass,beanName);
+
+        if(bean != null){
+            // 执行初始化后的处理器
+            return applyBeanPostProcessorsAfterInitialization(bean, beanName);
+
+        }
+        return null;
+    }
+
+    /**
+     * 在实例化之前调实例化处理器的前置方法，生成代理对象
+     * @param beanClass bean的类型
+     * @param beanName bean的名字
+     * @return 不为null - 该bean的代理对象
+     *         null - 无法生成代理对象
+     */
+    protected Object applyBeanPostProcessorBeforeInstantiation(Class<?> beanClass,String beanName){
+
+        Object bean;
+        for(BeanPostProcessor beanPostProcessor : getBeanPostProcessors()){
+            if(beanPostProcessor instanceof InstantiationAwareBeanPostProcessor){
+                bean = ((InstantiationAwareBeanPostProcessor) beanPostProcessor).postProcessBeforeInstantiation(beanClass,beanName);
+
+                if(bean != null){
+                    return bean;
+                }
+            }
+        }
+        return null;
     }
 
 }

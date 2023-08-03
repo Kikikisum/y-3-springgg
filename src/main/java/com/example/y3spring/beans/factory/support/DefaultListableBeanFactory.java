@@ -125,4 +125,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
         });
     }
 
+    @Override
+    public Object getBean(String beanName, Class<?> requiredType) {
+        return null;
+    }
 }

@@ -38,6 +38,8 @@ public class AdvisedSupport {
         this.targetSource = targetSource;
     }
 
+    public AdvisedSupport(){}
+
     public TargetSource getTargetSource() {
         return targetSource;
     }
