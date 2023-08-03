@@ -8,5 +8,5 @@ public interface MethodBeforeAdvice extends BeforeAdvice{
      * @param method 要调用的方法
      * @param args 参数表
      */
-    void before(Method method, Object[] args);
+    void before(Method method, Object[] args,Object target);
 }

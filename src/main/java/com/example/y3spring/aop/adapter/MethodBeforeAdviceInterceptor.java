@@ -18,7 +18,7 @@ public class MethodBeforeAdviceInterceptor implements MethodInterceptor, BeforeA
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
         // 执行连接点的逻辑之前 执行当前通知的逻辑
-        this.advice.before(invocation.getMethod(),invocation.getArguments());
+        this.advice.before(invocation.getMethod(),invocation.getArguments(),invocation.getThis());
         // 交给下一个拦截器
         return invocation.proceed();
     }
