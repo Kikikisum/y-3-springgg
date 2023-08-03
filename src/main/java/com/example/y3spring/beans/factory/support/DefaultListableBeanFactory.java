@@ -57,6 +57,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
     }
 
     @Override
+    public BeanDefinition<?> getBeanDefinition(String beanName, Class<?> beanClass) {
+        return beanDefinitionMap.get(beanName);
+    }
+
+    @Override
     public boolean containsBeanDefinition(String beanName) {
         return beanDefinitionMap.containsKey(beanName);
     }
@@ -94,7 +99,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
             //todo 先不考虑是否是多例 --> 为了简单 默认单例
 
             // 类型相同 直接放入结果
-            if(beanDefinition.getType().isAssignableFrom(type)){
+            if(type.isAssignableFrom(beanDefinition.getClass())){
                 result.add(beanName);
             }
 
@@ -119,6 +124,5 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
             getBean(beanName);
         });
     }
-
 
 }

@@ -7,6 +7,8 @@ import com.example.y3spring.beans.factory.config.BeanPostProcessor;
 import com.example.y3spring.beans.factory.support.DefaultListableBeanFactory;
 import com.example.y3spring.beans.factory.exception.BeansException;
 
+import java.util.concurrent.Executor;
+
 public interface ConfigurableApplicationContext extends ApplicationContext {
     /**
      * 启动或刷新上下文
@@ -18,6 +20,18 @@ public interface ConfigurableApplicationContext extends ApplicationContext {
      * 关闭上下文
      */
     void close();
+
+    /**
+     * 向当前上下文注册监听器
+     * @param listener 要注册的监听器对象
+     */
+    void addApplicationListener(ApplicationListener<?> listener);
+
+    /**
+     * 为本上下文添加一个异步线程池（用于异步处理任务）
+     * @param executor 异步线程池
+     */
+    void addTaskExecutor(Executor executor);
 
     abstract class AbstractApplicationContext extends DefaultResourceLoader implements ConfigurableApplicationContext {
 

@@ -17,4 +17,12 @@ public interface BeanDefinitionRegistry {
      * @return
      */
     boolean containsBeanDefinition(String name);
+
+    /**
+     * 根据bean的名字和类型获取该bean的定义
+     * @param beanName bean的名字
+     * @param beanClass bean的类型
+     * @return
+     */
+    BeanDefinition<?> getBeanDefinition(String beanName,Class<?> beanClass);
 }

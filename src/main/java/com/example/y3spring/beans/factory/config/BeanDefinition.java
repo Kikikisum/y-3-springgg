@@ -2,6 +2,7 @@ package com.example.y3spring.beans.factory.config;
 import com.example.y3spring.beans.factory.ConfigurableBeanFactory;
 import lombok.Data;
 
+
 @Data
 public class BeanDefinition<T> {
     /**

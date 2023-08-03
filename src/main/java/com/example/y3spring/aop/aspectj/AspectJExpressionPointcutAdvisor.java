@@ -5,8 +5,8 @@ import com.example.y3spring.aop.PointcutAdvisor;
 import org.aopalliance.aop.Advice;
 
 public class AspectJExpressionPointcutAdvisor implements PointcutAdvisor {
-    private final Advice advice;
-    private final Pointcut pointcut;
+    private Advice advice;
+    private Pointcut pointcut;
 
     public AspectJExpressionPointcutAdvisor(Advice advice) {
         this.advice = advice;
@@ -26,4 +26,13 @@ public class AspectJExpressionPointcutAdvisor implements PointcutAdvisor {
     public Pointcut getPointcut() {
         return this.pointcut;
     }
+
+    public void setPointcut(Pointcut pointcut){
+        this.pointcut=pointcut;
+    }
+
+    public void setAdvice(Advice advice){
+        this.advice=advice;
+    }
+
 }

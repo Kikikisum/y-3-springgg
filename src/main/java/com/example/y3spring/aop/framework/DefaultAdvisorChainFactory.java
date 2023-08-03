@@ -3,9 +3,9 @@ package com.example.y3spring.aop.framework;
 import com.example.y3spring.aop.Advisor;
 import com.example.y3spring.aop.MethodMatcher;
 import com.example.y3spring.aop.PointcutAdvisor;
+import com.example.y3spring.aop.adapter.AdvisorAdapterRegistry;
+import com.example.y3spring.aop.adapter.GlobalAdvisorAdapterRegistry;
 import org.aopalliance.intercept.MethodInterceptor;
-import org.springframework.aop.framework.adapter.AdvisorAdapterRegistry;
-import org.springframework.aop.framework.adapter.DefaultAdvisorAdapterRegistry;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory{
     public List<Object> getInterceptorsAndDynamicInterceptionAdvice(AdvisedSupport config, Method method, Class<?> targetClass) {
 
         Class<?> actualClass = (targetClass != null ? targetClass : method.getDeclaringClass());
-        AdvisorAdapterRegistry registry = new DefaultAdvisorAdapterRegistry();
+        AdvisorAdapterRegistry registry = GlobalAdvisorAdapterRegistry.getInstance();
         List<Object> interceptorList = new ArrayList<>();
 
         List<Advisor> advisors = config.getAdvisors();
@@ -36,7 +36,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory{
                 }
 
             }else {
-                MethodInterceptor[] interceptors = registry.getInterceptors((org.springframework.aop.Advisor) advisor);
+                MethodInterceptor[] interceptors = registry.getInterceptors(advisor);
                 interceptorList.addAll(Arrays.asList(interceptors));
             }
         }

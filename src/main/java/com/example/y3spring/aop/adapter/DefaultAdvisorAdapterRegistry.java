@@ -1,6 +1,7 @@
 package com.example.y3spring.aop.adapter;
 
 import com.example.y3spring.aop.Advisor;
+import com.example.y3spring.aop.support.DefaultPointcutAdvisor;
 import org.aopalliance.aop.Advice;
 import org.aopalliance.intercept.MethodInterceptor;
 
@@ -37,5 +38,16 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry{
         }
 
         return interceptors.toArray(new MethodInterceptor[0]);
+    }
+
+    @Override
+    public Advisor wrap(Advice advice) {
+
+        if(advice instanceof Advisor){
+            return (Advisor) advice;
+        }
+
+        // 默认返回一个DefaultPointcutAdvisor
+        return new DefaultPointcutAdvisor(advice);
     }
 }
