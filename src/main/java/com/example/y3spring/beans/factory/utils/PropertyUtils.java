@@ -1,6 +1,5 @@
 package com.example.y3spring.beans.factory.utils;
 
-import jakarta.annotation.Nullable;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -83,7 +82,7 @@ public class PropertyUtils {
      * @param clazz 指定类的class
      * @param propertyName 属性名
      */
-    public static void addPropertyDescriptor(Class<?> clazz, String propertyName, @Nullable Class<?> anotherType){
+    public static void addPropertyDescriptor(Class<?> clazz, String propertyName, Class<?> anotherType){
         Method setterMethod;
         Method getterMethod;
         PropertyDescriptor pd;

@@ -5,6 +5,8 @@ import com.example.y3spring.beans.factory.co.io.DefaultResourceLoader;
 import com.example.y3spring.beans.factory.ConfigurableListableBeanFactory;
 import com.example.y3spring.beans.factory.config.BeanFactoryPostProcessor;
 import com.example.y3spring.beans.factory.config.BeanPostProcessor;
+import com.example.y3spring.beans.factory.config.PropertyPlaceholderConfigurer;
+import com.example.y3spring.beans.factory.config.PropertyResourceConfigurer;
 import com.example.y3spring.beans.factory.support.ApplicationContextAwareProcessor;
 import com.example.y3spring.beans.factory.support.ApplicationListenerDetector;
 import com.example.y3spring.beans.factory.support.DefaultListableBeanFactory;
@@ -67,6 +69,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
         beanFactory.addBeanPostProcessor(new ApplicationListenerDetector(this));
         // 添加AOP自动创建代理对象用的实例化处理器
         beanFactory.addBeanPostProcessor(new AbstractAdvisorAutoProxyCreator(beanFactory));
+        beanFactory.addBeanFactoryPostProcessor(new PropertyPlaceholderConfigurer(this));
     }
 
     /**
@@ -127,6 +130,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
                 beanFactory.addBeanPostProcessor((BeanPostProcessor) bean);
             }else {
                 throw new BeansException("the bean name with: ["+postProcessorName+"] is not a BeanPostProcessor");
+            }
+            if(bean instanceof ApplicationContextAware){
+                ((ApplicationContextAware) bean).setApplicationContext(this);
             }
         }
     }

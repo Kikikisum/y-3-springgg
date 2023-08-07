@@ -1,5 +1,6 @@
 package com.example.y3spring.context;
 
+import com.example.y3spring.beans.factory.config.BeanDefinition;
 import com.example.y3spring.beans.factory.support.DefaultListableBeanFactory;
 
 public abstract class AbstractRefreshableApplicationContext extends AbstractApplicationContext{
@@ -44,4 +45,14 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
      * 将BeanDefinition加载到指定的BeanFactory中。此功能委托给BeanDefinitionReader来实现
      */
     protected abstract void loadBeanDefinitions(DefaultListableBeanFactory beanFactory);
+
+    @Override
+    public String[] getBeanDefinitionNames() {
+        return beanFactory.getBeanDefinitionNames();
+    }
+
+    @Override
+    public BeanDefinition<?> getBeanDefinitionByName(String beanName) {
+        return beanFactory.getBeanDefinitionByName(beanName);
+    }
 }

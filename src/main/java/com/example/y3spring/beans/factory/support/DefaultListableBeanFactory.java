@@ -1,6 +1,7 @@
 package com.example.y3spring.beans.factory.support;
 
 
+import cn.hutool.core.util.StrUtil;
 import com.example.y3spring.beans.factory.ConfigurableListableBeanFactory;
 import com.example.y3spring.beans.factory.config.BeanDefinition;
 
@@ -128,5 +129,18 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
     @Override
     public Object getBean(String beanName, Class<?> requiredType) {
         return null;
+    }
+
+    @Override
+    public String[] getBeanDefinitionNames() {
+        return beanDefinitionMap.keySet().toArray(new String[0]);
+    }
+
+    @Override
+    public BeanDefinition<?> getBeanDefinitionByName(String beanName) {
+        if(StrUtil.isBlank(beanName)){
+            throw new IllegalArgumentException("beanName should not be null or empty");
+        }
+        return beanDefinitionMap.get(beanName);
     }
 }
