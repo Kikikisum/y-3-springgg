@@ -2,9 +2,9 @@ package com.example.y3spring.annotation;
 
 import java.lang.annotation.*;
 
-@Target(ElementType.TYPE)
+@Target({ElementType.METHOD,ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Controller {
+public @interface YRequestMapping {
     String value() default "";
 }

@@ -1,6 +1,6 @@
 package com.example.y3spring.web.webmvc;
 
-import com.example.y3spring.annotation.RequestParam;
+import com.example.y3spring.annotation.YRequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,8 +29,8 @@ public class HandlerAdapter {
         for (int i = 0; i < pa.length; i++) {
             // 第 i 个位置参数的注解们
             for (Annotation a : pa[i]) {
-                if (a instanceof RequestParam) {
-                    String paramName = ((RequestParam) a).value();
+                if (a instanceof YRequestParam) {
+                    String paramName = ((YRequestParam) a).value();
                     if (!"".equals(paramName.trim())) {
                         // @RequestParam(value = paramName)
                         paramIdxMapping.put(paramName, i);

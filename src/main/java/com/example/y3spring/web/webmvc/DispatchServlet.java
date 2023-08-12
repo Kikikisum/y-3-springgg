@@ -1,6 +1,8 @@
 package com.example.y3spring.web.webmvc;
 
-import com.example.y3spring.annotation.RequestMapping;
+import com.example.y3spring.annotation.YRequestMapping;
+import com.example.y3spring.beans.factory.utils.PropertyUtils;
+import com.example.y3spring.context.AbstractApplicationContext;
 import com.example.y3spring.context.ApplicationContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -29,6 +31,7 @@ public class DispatchServlet extends HttpServlet {
     private Map<HandlerMapping, HandlerAdapter> handlerAdapters = new HashMap<HandlerMapping, HandlerAdapter>();
 
     private List<ViewResolver> viewResolvers = new ArrayList<ViewResolver>();
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -108,6 +111,11 @@ public class DispatchServlet extends HttpServlet {
         return null;
     }
 
+    public void init(ApplicationContext context) throws ServletException {
+        //初始化SpringMVC九大组件
+        initStrategies(context);
+    }
+
     // 通过Request获取相应handler
     private HandlerMapping getHandler(HttpServletRequest req) {
         if (this.handlerMappings.isEmpty()) return null;
@@ -127,16 +135,6 @@ public class DispatchServlet extends HttpServlet {
         return null;
     }
 
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-
-        // 1.初始化ApplicationContext ！！！
-        // tomcat会加载web.xml并创建其中配置的servlet，同时会执行init方法，这里的config即web.xml配置信息
-        // context = new ApplicationContext(config.getInitParameter(CONTEXT_CONFIG_LOCATION));
-
-        // 2.初始化SpringMVC九大组件
-        // initStrategies(context);
-    }
 
     protected void initStrategies(ApplicationContext context) {
         //多文件上传的组件
@@ -145,8 +143,6 @@ public class DispatchServlet extends HttpServlet {
         initLocaleResolver(context);
         //初始化模板处理器
         initThemeResolver(context);
-
-
         //handlerMapping，必须实现
         initHandlerMappings(context);
         //初始化参数适配器，必须实现
@@ -155,8 +151,6 @@ public class DispatchServlet extends HttpServlet {
         initHandlerExceptionResolvers(context);
         //初始化视图预处理器
         initRequestToViewNameTranslator(context);
-
-
         //初始化视图转换器，必须实现
         initViewResolvers(context);
         //参数缓存器
@@ -168,6 +162,7 @@ public class DispatchServlet extends HttpServlet {
     }
 
     private void initViewResolvers(ApplicationContext context) {
+
         // 拿到模板存放路径(layouts)
         String templateRoot = context.getConfig().getProperty("templateRoot");
         // getResource返回的是URL对象
@@ -213,19 +208,19 @@ public class DispatchServlet extends HttpServlet {
 
                 // 获取当期Controller的共有url
                 String baseUrl = "";
-                if (clazz.isAnnotationPresent(RequestMapping.class)) {
-                    RequestMapping annotation = clazz.getAnnotation(RequestMapping.class);
+                if (clazz.isAnnotationPresent(YRequestMapping.class)) {
+                    YRequestMapping annotation = clazz.getAnnotation(YRequestMapping.class);
                     baseUrl = annotation.value();
                 }
 
                 // 获取所有方法的处理路径
                 Method[] methods = clazz.getMethods();
                 for (Method method : methods) {
-                    if (!method.isAnnotationPresent(RequestMapping.class)) {
+                    if (!method.isAnnotationPresent(YRequestMapping.class)) {
                         continue;
                     }
 
-                    RequestMapping annotation = method.getAnnotation(RequestMapping.class);
+                    YRequestMapping annotation = method.getAnnotation(YRequestMapping.class);
                     String regex = ("/" + baseUrl + "/" + annotation.value().replaceAll("\\*", ".*")).replaceAll("/+", "/");
                     Pattern pattern = Pattern.compile(regex);
                     // 构建处理器，并加入handlerMapping

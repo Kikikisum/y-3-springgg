@@ -1,11 +1,10 @@
 package com.example.y3spring.annotation;
+
 import java.lang.annotation.*;
 
-@Target(ElementType.PARAMETER)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface RequestParam {
+public @interface YController {
     String value() default "";
-
-    boolean required() default true;
 }
