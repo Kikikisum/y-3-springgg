@@ -11,7 +11,7 @@ import java.net.URL;
 public class DefaultResourceLoader implements ResourceLoader{
     private static final String CLASSPATH_PREFIX = "classpath:";
 
-    @Override
+
     public Resource getResource(String location) {
         // 如果以classpath开头，则返回ClassPathResource
         if(location.startsWith(CLASSPATH_PREFIX)){

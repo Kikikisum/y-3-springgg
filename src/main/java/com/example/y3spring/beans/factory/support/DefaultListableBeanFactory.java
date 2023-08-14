@@ -97,8 +97,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
         List<String> result = new ArrayList<>();
         //先查看自动注册的注册表
         beanDefinitionMap.forEach((beanName,beanDefinition)->{
-            //todo 先不考虑是否是多例 --> 为了简单 默认单例
-
+            // 先不考虑是否是多例
             // 类型相同 直接放入结果
             if(type.isAssignableFrom(beanDefinition.getClass())){
                 result.add(beanName);
