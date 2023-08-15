@@ -1,13 +1,10 @@
 package com.example.y3spring.web.webmvc;
 
 import com.example.y3spring.annotation.YRequestMapping;
-import com.example.y3spring.beans.factory.utils.PropertyUtils;
-import com.example.y3spring.context.AbstractApplicationContext;
 import com.example.y3spring.context.ApplicationContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

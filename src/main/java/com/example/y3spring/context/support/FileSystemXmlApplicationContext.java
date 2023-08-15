@@ -1,8 +1,8 @@
-package com.example.y3spring.context;
+package com.example.y3spring.context.support;
 
 import com.example.y3spring.beans.factory.co.io.Resource;
 
-public class FileSystemXmlApplicationContext extends AbstractXmlApplicationContext{
+public class FileSystemXmlApplicationContext extends AbstractXmlApplicationContext {
     private final Resource[] resources;
 
     public FileSystemXmlApplicationContext(String configLocation){
