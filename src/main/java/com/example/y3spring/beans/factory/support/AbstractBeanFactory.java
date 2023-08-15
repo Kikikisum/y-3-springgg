@@ -7,108 +7,37 @@ import com.example.y3spring.beans.factory.FactoryBean;
 import com.example.y3spring.beans.factory.config.BeanDefinition;
 import com.example.y3spring.beans.factory.config.BeanFactoryPostProcessor;
 import com.example.y3spring.beans.factory.config.BeanPostProcessor;
+import com.example.y3spring.beans.factory.config.InstantiationAwareBeanPostProcessor;
 import com.example.y3spring.beans.factory.exception.BeansException;
+import com.example.y3spring.beans.factory.utils.StringValueResolver;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory, ConfigurableBeanFactory {
+public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport implements BeanFactory, ConfigurableBeanFactory {
     private final List<BeanPostProcessor> beanPostProcessors = new ArrayList<>();
 
     private final List<BeanFactoryPostProcessor> beanFactoryPostProcessors = new ArrayList<>();
 
-    /**
-     * 创建名为beanName的Bean实例
-     * 创建策略由实现类决定
-     */
-    protected abstract <T> T createBean(BeanDefinition<T> beanDefinition);
+    private final List<StringValueResolver> embeddedStringResolvers = new ArrayList<>();
 
-    /**
-     * 根据beanName获取它的bean定义
-     */
-    protected abstract BeanDefinition<?> getBeanDefinition(String beanName);
-
-    protected abstract <T> T createBean(String name, BeanDefinition<T> beanDefinition);
-
-    @Override
-    public List<BeanPostProcessor> getBeanPostProcessors() {
-        return beanPostProcessors;
-    }
-
-    @Override
-    public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor) {
-        beanPostProcessors.add(beanPostProcessor);
-    }
-
-    @Override
-    public List<BeanFactoryPostProcessor> getBeanFactoryBeanPostProcessors() {
-        return beanFactoryPostProcessors;
-    }
-
-    @Override
-    public void addBeanFactoryPostProcessor(BeanFactoryPostProcessor beanFactoryPostProcessor) {
-        if(beanFactoryPostProcessor==null)
-        {
-            throw new BeansException("beanPostProcessor不能为空!");
-        }
-        //删去之前的beanPostProcessor,添加新的
-        beanPostProcessors.remove(beanFactoryPostProcessor);
-        beanFactoryPostProcessors.add(beanFactoryPostProcessor);
-    }
-    @Override
-    public void destroySingleton(String beanName, Object bean) {
-        // 委托给DisposableBeanAdapter进行处理
-        new DisposableBeanAdapter(beanName,bean,getBeanDefinition(beanName)).destroy();
-    }
+    private List<InstantiationAwareBeanPostProcessor> instantiationAwareBeanPostProcessorCache;
 
     @Override
     public Object getBean(String beanName) {
-
-        Object bean = null;
-
-        BeanDefinition<?> beanDefinition = getBeanDefinition(beanName);
-
-        // 单例模式
-        if(beanDefinition.isSingleton()){
-            // 先查看缓存中有无该bean
-            bean = getSingleton(beanName);
-
-            // 如果bean为空，则说明缓存注册表中没有 需要在工厂中创建一个新的实例
-            if(bean == null){
-                synchronized (AbstractBeanFactory.class){
-                    bean = createBean(beanName, beanDefinition);
-                    addSingleton(beanName,bean);
-                }
-            }
-            // 多例bean 创建一个新实例
-        }else if(beanDefinition.isPrototype()){
-            bean = createBean(beanName,beanDefinition);
-        }
-
-        if(bean == null){
-            throw new BeansException("The scope of the bean [" + beanName + "] is invalid");
-        }
-
-        return bean;
+        return doGetBean(beanName,null);
     }
 
-    protected Object adaptBeanInstance(String beanName, Object beanInstance, Class<?> requiredType) {
-        // 如果bean不是指定类型的实例 需要判断能否转化成指定类型
-        if(requiredType != null && !requiredType.isInstance(beanInstance)){
-            // 判断能够转化为对应类型的对象
-
-            // 如果bean实例是目标类型的子类
-            if(requiredType.isAssignableFrom(beanInstance.getClass())){
-                return requiredType.cast(beanInstance);
-            }
-        }
-        return beanInstance;
+    @Override
+    public Object getBean(String beanName, Class<?> requiredType) {
+        return doGetBean(beanName,requiredType);
     }
 
     protected Object doGetBean(String beanName, Class<?> requiredType){
-        Object beanInstance = null;
+
+        Object beanInstance;
         Object sharedInstance = null;
 
         BeanDefinition<?> beanDefinition = getBeanDefinition(beanName);
@@ -128,7 +57,6 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
         // 否则要准备创建新的bean实例
         else {
             beanInstance = createBean(beanName,beanDefinition);
-
             // 单例 需要缓存
             if(beanDefinition.isSingleton()){
                 addSingleton(beanName,beanInstance);
@@ -139,6 +67,59 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
 
         return adaptBeanInstance(beanName,beanInstance,requiredType);
     }
+
+    protected Object adaptBeanInstance(String beanName, Object beanInstance, Class<?> requiredType) {
+        // 如果bean不是指定类型的实例 需要判断能否转化成指定类型
+        if(requiredType != null && !requiredType.isInstance(beanInstance)){
+            // 判断能够转化为对应类型的对象
+
+            // 如果bean实例是目标类型的子类
+            if(requiredType.isAssignableFrom(beanInstance.getClass())){
+                return requiredType.cast(beanInstance);
+            }
+        }
+
+        return beanInstance;
+    }
+
+    /**
+     * 创建名为beanName的Bean实例
+     * 创建策略由实现类决定
+     */
+    protected abstract Object createBean(String beanName,BeanDefinition<?> beanDefinition);
+
+    /**
+     * 根据beanName获取它的bean定义
+     */
+    protected abstract BeanDefinition<?> getBeanDefinition(String beanName);
+
+    @Override
+    public List<BeanPostProcessor> getBeanPostProcessors() {
+        return beanPostProcessors;
+    }
+
+    @Override
+    public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor) {
+        if(beanPostProcessor == null){
+            throw new BeansException("添加的beanPostProcessor不能为空");
+        }
+        // 把旧的删掉
+        beanPostProcessors.remove(beanPostProcessor);
+        // 添加新的
+        beanPostProcessors.add(beanPostProcessor);
+    }
+
+    @Override
+    public List<BeanFactoryPostProcessor> getBeanFactoryBeanPostProcessors() {
+        return beanFactoryPostProcessors;
+    }
+
+    @Override
+    public void addBeanFactoryPostProcessor(BeanFactoryPostProcessor beanFactoryPostProcessor) {
+        beanFactoryPostProcessors.add(beanFactoryPostProcessor);
+    }
+
+
     /**
      * 从bean实例中获取bean
      * 用于特殊bean的处理（如FactoryBean、prototype作用域的bean等）
@@ -146,23 +127,60 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
      */
     protected Object getObjectForBeanInstance(Object beanInstance,String beanName){
 
-        Object instance = null;
+        Object instance;
         // 如果该实例是FactoryBean，则获取内置的bean
         if(beanInstance instanceof FactoryBean){
             // 先从缓存中获取
-            //Object cacheInstance = getCachedObjectForFactoryBean(beanName);
-            //if(cacheInstance != null){
-            //    return cacheInstance;
-            //}
+            Object cacheInstance = getCachedObjectForFactoryBean(beanName);
+            if(cacheInstance != null){
+                return cacheInstance;
+            }
             // 若缓存中没有
             FactoryBean<?> factory = (FactoryBean<?>) beanInstance;
 
-            //instance = getObjectFromFactoryBean(beanName,factory);
+            instance = getObjectFromFactoryBean(beanName,factory);
 
         }else {
             instance = beanInstance;
         }
 
         return instance;
+    }
+
+    @Override
+    public void addEmbeddedValueResolver(StringValueResolver valueResolver) {
+        embeddedStringResolvers.add(valueResolver);
+    }
+
+    @Override
+    public StringValueResolver[] getEmbeddedValueResolvers() {
+        return embeddedStringResolvers.toArray(new StringValueResolver[0]);
+    }
+
+    /**
+     * 检查当前BeanFactory中是否有注册InstantiationAwareBeanPostProcess
+     * @return
+     */
+    protected boolean hasInstantiationAwareBeanPostProcessors(){
+        // cache为空 重新获取
+        if(instantiationAwareBeanPostProcessorCache == null){
+            getBeanPostProcessorsCache();
+        }
+        return !this.instantiationAwareBeanPostProcessorCache.isEmpty();
+    }
+
+    protected void getBeanPostProcessorsCache(){
+
+        this.instantiationAwareBeanPostProcessorCache = new ArrayList<>();
+        for (BeanPostProcessor beanPostProcessor : this.beanPostProcessors) {
+            if(beanPostProcessor instanceof InstantiationAwareBeanPostProcessor){
+                this.instantiationAwareBeanPostProcessorCache.add((InstantiationAwareBeanPostProcessor) beanPostProcessor);
+            }
+        }
+
+    }
+
+    public List<InstantiationAwareBeanPostProcessor> getInstantiationAwareBeanPostProcessorCache() {
+        return instantiationAwareBeanPostProcessorCache;
     }
 }

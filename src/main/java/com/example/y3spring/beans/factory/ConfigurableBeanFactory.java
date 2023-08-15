@@ -3,6 +3,7 @@ package com.example.y3spring.beans.factory;
 import com.example.y3spring.beans.factory.config.BeanFactoryPostProcessor;
 import com.example.y3spring.beans.factory.config.BeanPostProcessor;
 import com.example.y3spring.beans.factory.support.SingletonBeanRegistry;
+import com.example.y3spring.beans.factory.utils.StringValueResolver;
 
 import java.util.List;
 
@@ -60,4 +61,15 @@ public interface ConfigurableBeanFactory extends BeanFactory, SingletonBeanRegis
      * @param bean
      */
     void destroySingleton(String beanName,Object bean);
+
+    /**
+     * 往当前BeanFactory中添加指定的嵌入式字符串处理器
+     * @param valueResolver 字符串处理器
+     */
+    void addEmbeddedValueResolver(StringValueResolver valueResolver);
+
+    /**
+     * 获取当前BeanFactory中所有嵌入式字符串处理器
+     */
+    StringValueResolver[] getEmbeddedValueResolvers();
 }

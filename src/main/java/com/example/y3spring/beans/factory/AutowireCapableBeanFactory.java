@@ -1,6 +1,8 @@
 package com.example.y3spring.beans.factory;
 
 import com.example.y3spring.beans.factory.config.BeanDefinition;
+import com.example.y3spring.beans.factory.config.PropertyValues;
+import org.springframework.lang.Nullable;
 
 /**
  * 为BeanFactory提供自动装配Bean属性的接口
@@ -13,5 +15,5 @@ public interface AutowireCapableBeanFactory extends BeanFactory{
      * @param existingBean bean实例
      * @param beanDefinition bean定义
      */
-    <T> void autoWirePropertyValues(String name,T existingBean, BeanDefinition<T> beanDefinition);
+    void autoWirePropertyValues(String name, Object existingBean, BeanDefinition<?> beanDefinition, @Nullable PropertyValues pvs);
 }

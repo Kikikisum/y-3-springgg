@@ -13,4 +13,14 @@ public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor{
         return null;
     }
 
+    /**
+     * 用于在bean实例化之后，注入属性之前更改要注入的属性列表
+     * @param pv 属性列表
+     * @param bean bean实例
+     * @param beanName bean名字
+     * @return 更改后的属性列表
+     */
+    default PropertyValues postProcessPropertyValues(PropertyValues pv,Object bean,String beanName){
+        return null;
+    }
 }

@@ -2,8 +2,8 @@ package com.example.y3spring.beans.factory.config;
 
 public class PropertyValue {
 
-    private final String name;
-    private final Object value;
+    private  String name;
+    private Object value;
 
     public PropertyValue(String name, Object value){
         this.name=name;
@@ -18,4 +18,7 @@ public class PropertyValue {
         return value;
     }
 
+    public void setPropertyValue(Object propertyValue) {
+        value = propertyValue;
+    }
 }

@@ -162,4 +162,28 @@ public class PropertyUtils {
 
         return (T) propertyValue;
     }
+
+    public static void addAllPropertyDescriptor(Class<?> clazz) {
+        Map<String, PropertyDescriptor> descriptorMap = BEANS_PROPERTY_MAP.get(clazz);
+        if(descriptorMap == null){
+            BEANS_PROPERTY_MAP.putIfAbsent(clazz,new HashMap<>());
+            descriptorMap = BEANS_PROPERTY_MAP.get(clazz);
+        }
+        // 获取该类的所有属性的Descriptor
+        Field[] fields = clazz.getDeclaredFields();
+        for(Field field : fields){
+            String propertyName = field.getName();
+            try {
+                Class<?> propertyType = field.getType();
+
+                PropertyDescriptor pv = new PropertyDescriptor(propertyName, clazz);
+
+                descriptorMap.put(propertyName,pv);
+                addPropertyType(clazz, propertyName, propertyType);
+
+            } catch (IntrospectionException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

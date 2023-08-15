@@ -5,6 +5,7 @@ import com.example.y3spring.beans.factory.co.io.DefaultResourceLoader;
 import com.example.y3spring.beans.factory.ConfigurableListableBeanFactory;
 import com.example.y3spring.beans.factory.config.BeanFactoryPostProcessor;
 import com.example.y3spring.beans.factory.config.BeanPostProcessor;
+import com.example.y3spring.beans.factory.config.PlaceholderConfigurerSupport;
 import com.example.y3spring.beans.factory.config.PropertyPlaceholderConfigurer;
 import com.example.y3spring.beans.factory.support.ApplicationContextAwareProcessor;
 import com.example.y3spring.beans.factory.support.ApplicationListenerDetector;
@@ -65,10 +66,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
 
         // 添加处理上下文感知的后置处理器
         beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
-        beanFactory.addBeanPostProcessor(new ApplicationListenerDetector(this));
+        beanFactory.addBeanFactoryPostProcessor(new PlaceholderConfigurerSupport(this));
+        beanFactory.addBeanPostProcessor(new ApplicationListenerDetector());
         // 添加AOP自动创建代理对象用的实例化处理器
         beanFactory.addBeanPostProcessor(new AbstractAdvisorAutoProxyCreator(beanFactory));
         beanFactory.addBeanFactoryPostProcessor(new PropertyPlaceholderConfigurer(this));
+
     }
 
     /**

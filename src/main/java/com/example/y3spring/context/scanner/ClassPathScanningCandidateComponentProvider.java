@@ -2,6 +2,7 @@ package com.example.y3spring.context.scanner;
 
 import cn.hutool.core.util.ClassUtil;
 import com.example.y3spring.beans.factory.config.BeanDefinition;
+import com.example.y3spring.beans.factory.utils.PropertyUtils;
 import com.example.y3spring.context.annotation.Component;
 
 import java.util.HashSet;
@@ -30,6 +31,8 @@ public class ClassPathScanningCandidateComponentProvider {
         BeanDefinition<?> beanDefinition = new BeanDefinition<>();
         beanDefinition.setType(clazz);
 
+        // 还要将该bean的所有属性注册进IOC容器
+        PropertyUtils.addAllPropertyDescriptor(clazz);
         return beanDefinition;
     }
 }
