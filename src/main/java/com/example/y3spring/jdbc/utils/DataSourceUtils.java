@@ -7,6 +7,7 @@ import org.springframework.util.Assert;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public abstract class DataSourceUtils {
@@ -29,5 +30,8 @@ public abstract class DataSourceUtils {
 
         return null;
 
+    }
+
+    public static void close(Connection con, PreparedStatement pst) {
     }
 }

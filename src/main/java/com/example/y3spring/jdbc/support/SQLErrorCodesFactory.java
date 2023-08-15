@@ -1,15 +1,16 @@
 package com.example.y3spring.jdbc.support;
 
+import com.example.y3spring.beans.factory.co.io.DefaultResourceLoader;
 import com.example.y3spring.beans.factory.co.io.Resource;
 import com.example.y3spring.beans.factory.co.io.ResourceLoader;
 import com.example.y3spring.beans.factory.support.BeanDefinitionRegistry;
+import com.example.y3spring.beans.factory.support.DefaultListableBeanFactory;
 import com.example.y3spring.beans.factory.support.XmlBeanDefinitionReader;
 import com.example.y3spring.jdbc.exception.MetaDataAccessException;
 import com.example.y3spring.jdbc.utils.JdbcUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ConcurrentReferenceHashMap;
@@ -46,17 +47,17 @@ public class SQLErrorCodesFactory {
     /**
      * 创造工厂
      */
-    protected SQLErrorCodesFactory() {
+    public SQLErrorCodesFactory() {
         Map<String, SQLErrorCodes> errorCodes=null;
 
         try {
             // 还未进行获取
-            ResourceLoader resourceLoader = null;
-            BeanDefinitionRegistry beanDefinitionRegistry = null;
+            ResourceLoader resourceLoader = new DefaultResourceLoader();
+            BeanDefinitionRegistry beanDefinitionRegistry = new DefaultListableBeanFactory();
             XmlBeanDefinitionReader bdr = new XmlBeanDefinitionReader(resourceLoader,beanDefinitionRegistry);
 
             // 获取错误所在的资源
-            Resource resource = ResourceLoader.getResource(SQL_ERROR_CODE_DEFAULT_PATH);
+            Resource resource = resourceLoader.getResource(SQL_ERROR_CODE_DEFAULT_PATH);
             if (resource != null) {
                 //还未实现
             }
