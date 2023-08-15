@@ -7,7 +7,5 @@ public interface ResourceLoader {
      * @param location 资源路径
      * @return
      */
-    static Resource getResource(String location) {
-        return null;
-    }
+    Resource getResource(String location);
 }
