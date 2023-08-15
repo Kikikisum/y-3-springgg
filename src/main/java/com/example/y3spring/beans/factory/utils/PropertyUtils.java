@@ -137,11 +137,7 @@ public class PropertyUtils {
     }
 
     public static Map<String,Class<?>> getPropertyTypeMap(Class<?> clazz){
-        Map<String, Class<?>> propertyTypeMap = BEANS_PROPERTY_TYPE_MAP.get(clazz);
-        if(propertyTypeMap == null){
-            throw new IllegalArgumentException("该Bean类型不存在");
-        }
-        return propertyTypeMap;
+        return BEANS_PROPERTY_TYPE_MAP.get(clazz);
     }
     /**
      * 将传入的属性值按照属性类型进行转换 并返回转换后的值，只限于基本类

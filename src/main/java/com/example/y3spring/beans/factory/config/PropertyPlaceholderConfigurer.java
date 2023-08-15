@@ -47,6 +47,9 @@ public class PropertyPlaceholderConfigurer extends PropertyResourceConfigurer im
      */
     protected void resolvePropertyValues(BeanDefinition<?> beanDefinition,Properties props){
         PropertyValues propertyValues = beanDefinition.getPropertyValues();
+        if (propertyValues == null){
+            return;
+        }
         for (PropertyValue pv : propertyValues.getPropertyValues()) {
             Object originValue = pv.getValue();
             if(originValue instanceof String){

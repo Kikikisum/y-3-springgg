@@ -41,6 +41,7 @@ public class BeanDefinition<T> {
      */
     private boolean isPrototype;
 
+    private String scope;
 
     public BeanDefinition(){};
 
@@ -57,10 +58,20 @@ public class BeanDefinition<T> {
     }
 
     public boolean isSingleton() {
-        return isSingleton;
+        return isSingleton||!isPrototype();
     }
 
     public boolean isPrototype() {
         return isPrototype;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+        if(SCOPE_SINGLETON.equals(scope)){
+            isSingleton = true;
+        }
+        if(SCOPE_PROTOTYPE.equals(scope)){
+            isPrototype = true;
+        }
     }
 }

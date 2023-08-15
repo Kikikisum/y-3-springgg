@@ -54,6 +54,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     @Override
     public <T> void autoWirePropertyValues(String beanName, T existingBean, BeanDefinition<T> beanDefinition){
         PropertyValues propertyValues = beanDefinition.getPropertyValues();
+        if(propertyValues == null){
+            return;
+        }
         Class<?> clazz = existingBean.getClass();
         // 获取该Bean类的所有PropertyDescriptor --> 生命周期开始为在XMl扫描时按需调用
         Map<String, PropertyDescriptor> beanPropertyMap = PropertyUtils.getBeanPropertyMap(clazz);
@@ -66,8 +69,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             Object propertyValue = pv.getValue();
 
             try {
-                //todo xml配置中 普通属性不能配置类型 应该以其他方式获取
-//                Class<?> propertyType = clazz.getDeclaredField(propertyName).getType();
+                // xml配置中 普通属性不能配置类型 应该以其他方式获取
                 PropertyDescriptor pd = beanPropertyMap.get(propertyName);
 
                 // 从属性类型map中获取属性类型
@@ -79,22 +81,22 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
                     BeanReference beanReference = (BeanReference) propertyValue;
                     String referBeanName = beanReference.getName();
-                    //todo 获取Bean实例 --> 1、有可能该Bean实例尚未创建 应该重写为阻塞等待 （不会有这种情况，因为是懒汉式的设计）
-                    //                    2、有可能会发生循环依赖，在后面再解决
+                    //获取Bean实例 --> 1、有可能该Bean实例尚未创建 应该重写为阻塞等待 （不会有这种情况，因为是懒汉式的设计）
+                    //               2、有可能会发生循环依赖，在后面再解决
                     Object innerBean = getBean(referBeanName);
 
                     setterMethod.invoke(existingBean,innerBean);
 
                 }else if(propertyType == BeanDefinition.class){
                     // Bean类型（级联定义了一个Bean）
-                    //todo 先根据Bean定义创建Bean实例  --> 有可能破坏单例 需要保存在多例注册表中
+                    // 先根据Bean定义创建Bean实例  --> 有可能破坏单例 需要保存在多例注册表中
                     BeanDefinition<?> innerBeanDefinition = (BeanDefinition<?>) propertyValue;
                     Object innerBean = createBean(beanName,innerBeanDefinition);
                     setterMethod.invoke(existingBean,innerBean);
                 }else {
                     // 普通属性 直接使用Setter方法注入
                     setterMethod.invoke(existingBean, propertyValue);
-                    //todo 需要一个类型转换适配器，否则任何propertyValue都是String类型的
+                    // 需要一个类型转换适配器，否则任何propertyValue都是String类型的
                     setterMethod.invoke(existingBean,
                             PropertyUtils.propertyValueTypeConversion((String)propertyValue,propertyType));
                 }

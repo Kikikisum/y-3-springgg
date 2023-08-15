@@ -10,12 +10,14 @@ import com.example.y3spring.beans.factory.utils.PropertyUtils;
 import com.example.y3spring.beans.factory.co.io.Resource;
 import com.example.y3spring.beans.factory.co.io.ResourceLoader;
 import com.example.y3spring.beans.factory.exception.BeansException;
+import com.example.y3spring.context.scanner.ClassPathBeanDefinitionScanner;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * 从xml文件读取bean定义的读取器
@@ -32,6 +34,12 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader{
     public static final String INIT_METHOD_ATTRIBUTE = "init-method";
     public static final String DESTROY_METHOD_ATTRIBUTE = "destroy-method";
     public static final String SCOPE_ATTRIBUTE = "scope";
+
+    public static final String COMPONENT_SCAN_TAG = "context:component-scan";
+
+    public static final String BASE_PACKAGE_ATTRIBUTE = "base-package";
+
+    private ClassPathBeanDefinitionScanner beanDefinitionScanner = new ClassPathBeanDefinitionScanner();
 
     public XmlBeanDefinitionReader(ResourceLoader resourceLoader, BeanDefinitionRegistry beanDefinitionRegistry) {
         super(resourceLoader, beanDefinitionRegistry);
@@ -65,22 +73,16 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader{
                 Element element = (Element) childNodes.item(i);
                 // 如果该标签为bean标签
                 if(BEAN_ELEMENT_TAG.equals(element.getTagName())){
-                    //解析bean标签
-                    String id = element.getAttribute(ID_ATTRIBUTE);
-                    String name = element.getAttribute(NAME_ATTRIBUTE);
-                    String className = element.getAttribute(CLASS_ATTRIBUTE);
-
-                    Class clazz;
-                    try {
-                        clazz = Class.forName(className);
-                    } catch (ClassNotFoundException e) {
-                        throw new BeansException("不存在该类型: [ "+ className + "] 的类",e);
-                    }
                     doLoadBeanDefinition(element);
+                }
+                // 如果该标签为component-scan标签
+                if(COMPONENT_SCAN_TAG.equals(element.getTagName())){
+                    loadComponentScanElement(element);
                 }
             }
         }
     }
+
 
     /**
      * 加载指定Bean标签的beanDefinition实际逻辑
@@ -192,5 +194,24 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader{
         for (Resource resource : resources) {
             loadBeanDefinitions(resource);
         }
+    }
+
+    /**
+     * 加载带有包扫描的标签
+     */
+    public void loadComponentScanElement(Element componentScanElement){
+        String basePackage = componentScanElement.getAttribute(BASE_PACKAGE_ATTRIBUTE);
+
+        String[] basePackages = basePackage.split(",");
+
+        Set<BeanDefinition<?>> beanDefinitionSet = beanDefinitionScanner.doScan(basePackages);
+
+        BeanDefinitionRegistry beanDefinitionRegistry = getBeanDefinitionRegistry();
+
+        for (BeanDefinition<?> beanDefinition : beanDefinitionSet) {
+            String beanName = beanDefinitionScanner.determineBeanName(beanDefinition);
+            beanDefinitionRegistry.registerBeanDefinition(beanName,beanDefinition);
+        }
+
     }
 }

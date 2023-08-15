@@ -108,22 +108,25 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
     }
 
     protected Object doGetBean(String beanName, Class<?> requiredType){
-        Object beanInstance;
+        Object beanInstance = null;
+        Object sharedInstance = null;
 
-        // 在缓存中获取共享的bean实例
-        Object sharedInstance = getSingleton(beanName);
+        BeanDefinition<?> beanDefinition = getBeanDefinition(beanName);
+        if(beanDefinition == null){
+            log.debug("The bean Definition for the bean named [" + beanName + "] could not be found");
+            return null;
+        }
+
+        if(beanDefinition.isSingleton()){
+            // 在缓存中获取共享的bean实例
+            sharedInstance = getSingleton(beanName);
+        }
 
         if(sharedInstance != null){
             beanInstance = getObjectForBeanInstance(sharedInstance,beanName);
         }
         // 否则要准备创建新的bean实例
         else {
-            BeanDefinition<?> beanDefinition = getBeanDefinition(beanName);
-
-            if(beanDefinition == null){
-                return null;
-            }
-
             beanInstance = createBean(beanName,beanDefinition);
 
             // 单例 需要缓存
