@@ -4,11 +4,11 @@
       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
 
 
-    <bean id="carBean1" class="com.example.yspring.entity.Car">
+    <bean id="carBean1" class="com.example.yspringtest.entity.Car">
           <property name="brand" value="Mashaladi"/>
           <property name="price" value="6000000"/>
     </bean>
-    <bean id="carRoll1" class="com.example.yspring.entity.Car">
+    <bean id="carRoll1" class="com.example.yspringtest.entity.Car">
         <property name="brand" value="niubiChelun"/>
     </bean>
 </beans>
