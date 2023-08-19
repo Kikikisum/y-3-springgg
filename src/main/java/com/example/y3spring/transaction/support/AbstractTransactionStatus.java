@@ -3,6 +3,7 @@ package com.example.y3spring.transaction.support;
 import com.example.y3spring.transaction.SavepointManager;
 import com.example.y3spring.transaction.TransactionStatus;
 import com.example.y3spring.transaction.exception.TransactionException;
+import com.example.y3spring.transaction.exception.TransactionUsageException;
 import org.springframework.lang.Nullable;
 
 public abstract class AbstractTransactionStatus implements TransactionStatus {
@@ -73,4 +74,28 @@ public abstract class AbstractTransactionStatus implements TransactionStatus {
     protected SavepointManager getSavepointManager() {
         throw new RuntimeException("该事务不存在保存点!");
     }
+
+    public void createAndHoldSavepoint() throws TransactionException {
+        setSavepoint(getSavepointManager().createSavepoint());
+    }
+    public void releaseHeldSavepoint() throws TransactionException {
+        Object savepoint = getSavepoint();
+        if (savepoint == null) {
+            throw new RuntimeException("保存点为空！！");
+        }
+        getSavepointManager().releaseSavepoint(savepoint);
+        setSavepoint(null);
+    }
+
+    public void rollbackToHeldSavepoint() throws TransactionException {
+        Object savepoint = getSavepoint();
+        if (savepoint == null) {
+            throw new TransactionUsageException(
+                    "无法回滚到为空的保存点！");
+        }
+        getSavepointManager().rollbackToSavepoint(savepoint);
+        getSavepointManager().releaseSavepoint(savepoint);
+        setSavepoint(null);
+    }
+
 }

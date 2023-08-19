@@ -9,30 +9,43 @@ public interface TransactionDefinition {
 
     // 默认
     int PROPAGATION_REQUIRED = 0;
+
     // 依赖外层，非事务继续运行
     int PROPAGATION_SUPPORTS = 1;
+
     // 无外层则抛出异常
     int PROPAGATION_MANDATORY = 2;
+
     // 开启新事务，当前有事务时，挂起处理
     int PROPAGATION_REQUIRES_NEW = 3;
+
     // 当前有事务时，挂起处理，不回滚
     int PROPAGATION_NOT_SUPPORTED = 4;
+
     // 外层有事务则抛出异常
     int PROPAGATION_NEVER = 5;
+
     // 可保存状态保存点
     int PROPAGATION_NESTED = 6;
+
     // 读已提交
     int ISOLATION_DEFAULT = -1;
+
     // 读未提交
     int ISOLATION_READ_UNCOMMITTED = 1;
+
     // 读已提交
     int ISOLATION_READ_COMMITTED = 2;
+
     // 可重复读
     int ISOLATION_REPEATABLE_READ = 4;
+
     // 串行化
     int ISOLATION_SERIALIZABLE = 8;
+
     // 超时
     int TIMEOUT_DEFAULT = -1;
+
 
     // 返回事务的传播行为，由是否有一个活动的事务来决定一个事务调用
 
@@ -61,5 +74,8 @@ public interface TransactionDefinition {
     }
 
 
-
+    static TransactionDefinition withDefaults() {
+        return null;
+        //return StaticTransactionDefinition.INSTANCE;
+    }
 }

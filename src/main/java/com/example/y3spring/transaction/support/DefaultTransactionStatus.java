@@ -72,4 +72,8 @@ public class DefaultTransactionStatus extends AbstractTransactionStatus {
     public void flush() {
         // 还未实现
     }
+
+    public boolean isNewTransaction() {
+        return (hasTransaction() && this.newTransaction);
+    }
 }
