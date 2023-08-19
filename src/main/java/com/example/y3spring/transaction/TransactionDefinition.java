@@ -76,6 +76,6 @@ public interface TransactionDefinition {
 
     static TransactionDefinition withDefaults() {
         return null;
-        //return StaticTransactionDefinition.INSTANCE;
+        // return StaticTransactionDefinition.INSTANCE;
     }
 }

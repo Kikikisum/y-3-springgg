@@ -99,10 +99,7 @@ public class DefaultTransactionDefinition implements TransactionDefinition {
         return getDefinitionDescription().toString();
     }
 
-    /**
-     * Return an identifying description for this transaction definition.
-     * <p>Available to subclasses, for inclusion in their {@code toString()} result.
-     */
+    // 照搬源码
     protected final StringBuilder getDefinitionDescription() {
         StringBuilder result = new StringBuilder();
         result.append(constants.toCode(this.propagationBehavior, PREFIX_PROPAGATION));

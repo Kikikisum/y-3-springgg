@@ -27,9 +27,6 @@ public class SQLErrorCodesFactory {
      */
     public static final String SQL_ERROR_CODE_OVERRIDE_PATH = "sql-error-codes.xml";
 
-    /**
-     * The name of default SQL error code files, loading from the class path.
-     */
     public static final String SQL_ERROR_CODE_DEFAULT_PATH = "com/example/y3spring/jdbc/support/sql-error-codes.xml";
 
     private static final Log logger = LogFactory.getLog(SQLErrorCodesFactory.class);
