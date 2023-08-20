@@ -1,4 +1,4 @@
-package com.example.y3spring.transaction.DataSource;
+package com.example.y3spring.transaction.dataSource;
 
 import org.springframework.util.Assert;
 

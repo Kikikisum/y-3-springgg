@@ -2,7 +2,7 @@ package com.example.y3spring.jdbc.utils;
 
 import com.example.y3spring.jdbc.exception.MetaDataAccessException;
 import com.example.y3spring.jdbc.support.DatabaseMetaDataCallback;
-import com.example.y3spring.transaction.DataSource.DataSourceUtils;
+import com.example.y3spring.transaction.dataSource.DataSourceUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

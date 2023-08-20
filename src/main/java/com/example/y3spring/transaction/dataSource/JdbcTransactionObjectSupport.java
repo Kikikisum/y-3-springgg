@@ -1,4 +1,4 @@
-package com.example.y3spring.transaction.DataSource;
+package com.example.y3spring.transaction.dataSource;
 
 import com.example.y3spring.transaction.SavepointManager;
 import com.example.y3spring.transaction.exception.TransactionException;

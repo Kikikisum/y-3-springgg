@@ -1,11 +1,11 @@
-package com.example.y3spring.transaction.DataSource;
+package com.example.y3spring.transaction.dataSource;
 
 import com.example.y3spring.transaction.support.TransactionSynchronizationAdapter;
 import com.example.y3spring.transaction.support.TransactionSynchronizationManager;
 
 import javax.sql.DataSource;
 
-import static com.example.y3spring.transaction.DataSource.DataSourceUtils.releaseConnection;
+import static com.example.y3spring.transaction.dataSource.DataSourceUtils.releaseConnection;
 
 public class ConnectionSynchronization extends TransactionSynchronizationAdapter {
     private final ConnectionHolder connectionHolder;

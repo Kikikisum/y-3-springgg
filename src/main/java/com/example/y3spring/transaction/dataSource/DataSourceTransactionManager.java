@@ -1,4 +1,4 @@
-package com.example.y3spring.transaction.DataSource;
+package com.example.y3spring.transaction.dataSource;
 
 import com.example.y3spring.transaction.TransactionDefinition;
 import com.example.y3spring.transaction.exception.TransactionException;
@@ -8,7 +8,6 @@ import com.example.y3spring.transaction.support.TransactionSynchronizationManage
 import com.example.y3spring.transaction.support.TransactionSynchronizationUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
