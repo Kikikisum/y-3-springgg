@@ -1,4 +1,7 @@
-package com.example.y3spring.web.restapi;
+package com.example.y3spring.web.restapi.client;
+
+import com.example.y3spring.web.restapi.HttpMethod;
+import com.example.y3spring.web.restapi.client.ClientHttpRequest;
 
 import java.io.IOException;
 import java.net.URI;

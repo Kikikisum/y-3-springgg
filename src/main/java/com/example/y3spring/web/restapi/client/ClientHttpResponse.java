@@ -1,9 +1,12 @@
-package com.example.y3spring.web.restapi;
+package com.example.y3spring.web.restapi.client;
+
+import com.example.y3spring.web.restapi.HttpInputMessage;
+import com.example.y3spring.web.restapi.HttpStatus;
 
 import java.io.Closeable;
 import java.io.IOException;
 
-public interface ClientHttpResponse extends Closeable,HttpInputMessage {
+public interface ClientHttpResponse extends Closeable, HttpInputMessage {
 
     /**
      * 返回响应的Http状态码

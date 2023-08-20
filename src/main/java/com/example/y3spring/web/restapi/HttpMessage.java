@@ -1,7 +1,5 @@
 package com.example.y3spring.web.restapi;
 
-import java.net.http.HttpHeaders;
-
 public interface HttpMessage {
 
     /**
