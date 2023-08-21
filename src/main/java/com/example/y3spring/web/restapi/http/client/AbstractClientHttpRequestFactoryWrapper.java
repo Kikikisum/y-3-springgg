@@ -18,7 +18,7 @@ public abstract class AbstractClientHttpRequestFactoryWrapper implements ClientH
 
 
     @Override
-    public static final ClientHttpRequest createRequest(URI uri, HttpMethod httpMethod) throws IOException {
+    public final ClientHttpRequest createRequest(URI uri, HttpMethod httpMethod) throws IOException {
         return createRequest(uri, httpMethod, this.requestFactory);
     }
 

@@ -52,6 +52,11 @@ public class InterceptingClientHttpRequest extends AbstractBufferingClientHttpRe
         return requestExecution.execute(this, bufferedOutput);
     }
 
+    ClientHttpRequest createRequest(URI url,HttpMethod method) {
+        return new InterceptingClientHttpRequest(requestFactory, this.interceptors, uri, method);
+    }
+
+
     private class InterceptingRequestExecution implements ClientHttpRequestExecution {
 
         private final Iterator<ClientHttpRequestInterceptor> iterator;

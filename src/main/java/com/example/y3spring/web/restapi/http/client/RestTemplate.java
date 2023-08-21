@@ -20,7 +20,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.example.y3spring.web.restapi.http.client.AbstractClientHttpRequestFactoryWrapper.createRequest;
 
 
 public class RestTemplate extends InterceptingClientHttpRequest implements RestOperations{
