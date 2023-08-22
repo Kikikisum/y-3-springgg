@@ -59,7 +59,6 @@ public abstract class AbstractApplicationEventMulticaster implements Application
      * @param listener 要检查的监听器
      * @param event 指定事件
      */
-    //todo 这里的判断逻辑可以优化 可以先将event解析成type 再使用type去检查
     protected boolean supportsEvent(ApplicationListener<?> listener, ApplicationEvent event){
         // 检查当前listener监听的事件类型（检查泛型的类型）
         Type[] genericInterfaces = listener.getClass().getGenericInterfaces();

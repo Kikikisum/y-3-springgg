@@ -29,10 +29,6 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
      */
     private final Map<Class<?>,String[]> singletonBeanNamesByType = new ConcurrentHashMap<>();
 
-    @Override
-    protected <T> T createBean(BeanDefinition<T> beanDefinition) {
-        return null;
-    }
 
     @Override
     protected BeanDefinition<?> getBeanDefinition(String beanName) {
@@ -123,6 +119,15 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
         beanDefinitionMap.forEach((beanName,beanDefinition)->{
             getBean(beanName);
         });
+    }
+
+    /**
+     * @param beanName
+     * @param bean
+     */
+    @Override
+    public void destroySingleton(String beanName, Object bean) {
+
     }
 
     @Override

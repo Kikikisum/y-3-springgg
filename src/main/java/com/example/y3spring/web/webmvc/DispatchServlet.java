@@ -109,7 +109,7 @@ public class DispatchServlet extends HttpServlet {
     }
 
     public void init(ApplicationContext context) throws ServletException {
-        //初始化SpringMVC九大组件
+        // 初始化SpringMVC九大组件
         initStrategies(context);
     }
 
@@ -194,11 +194,13 @@ public class DispatchServlet extends HttpServlet {
         String[] beanNames = context.getBeanDefinitionNames();
 
         try {
+            // 根据 beanName 遍历所有 bean，去寻找所有 Controller 对象
             for (String beanName : beanNames) {
                 Object controller = context.getBean(beanName);
-
+                // 获取到bean的Class，然后判断是否有 @YController 注解
                 Class<?> clazz = controller.getClass();
 
+                // 如果不是 Controller 就返回进行下一轮循环
                 if (!clazz.isAnnotationPresent(Controller.class)) {
                     continue;
                 }

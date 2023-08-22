@@ -17,6 +17,7 @@ public class PropertyPlaceholderConfigurer extends PropertyResourceConfigurer im
     private String location;
 
     public PropertyPlaceholderConfigurer(){}
+
     public PropertyPlaceholderConfigurer(ApplicationContext applicationContext){
         setApplicationContext(applicationContext);
     }

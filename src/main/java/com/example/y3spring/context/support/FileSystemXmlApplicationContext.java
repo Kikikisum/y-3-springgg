@@ -2,6 +2,8 @@ package com.example.y3spring.context.support;
 
 import com.example.y3spring.beans.factory.co.io.Resource;
 
+import java.util.Properties;
+
 public class FileSystemXmlApplicationContext extends AbstractXmlApplicationContext {
     private final Resource[] resources;
 
@@ -22,5 +24,13 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
     @Override
     protected Resource[] getConfigResources() {
         return resources;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public Properties getConfig() {
+        return null;
     }
 }

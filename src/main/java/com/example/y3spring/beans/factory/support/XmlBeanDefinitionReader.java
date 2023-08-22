@@ -137,7 +137,6 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader{
                     PropertyValue pv;
                     // 是一个值
                     if(StrUtil.isNotBlank(propertyValue)){
-                        //todo 这里的value是字符串类型 怎么转换为原类型？String可以转换成任意基本类型，而value只处理基本类型的属性
                         pv = new PropertyValue(propertyName, propertyValue);
 
                         PropertyUtils.addPropertyDescriptor(clazz,propertyName,null);

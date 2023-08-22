@@ -17,7 +17,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
         // 创建一个新的BeanFactory
         DefaultListableBeanFactory beanFactory = createBeanFactory();
 
-        // 加载所有的beanDefinition  todo 这里是否包含特殊bean？
+        // 加载所有的beanDefinition
         loadBeanDefinitions(beanFactory);
 
 

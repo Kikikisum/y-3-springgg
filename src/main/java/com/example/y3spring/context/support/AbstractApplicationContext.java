@@ -27,7 +27,6 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
     // 异步线程池 由用户决定是否添加
     private Executor taskExecutor;
 
-    //todo 模板方法 只提供了抽象逻辑 具体逻辑由子类实现 -- 有待完善
     @Override
     public void refresh() {
 
